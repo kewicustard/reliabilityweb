@@ -13,6 +13,12 @@
             2019 => true,
             2020 => true,
         ]); // true has target, false hasn't target
+
+        define('industrial', [
+            'H', 'L', 'P', 'U', 'A'
+        ]);
+
+        var_dump(industrial);
     }
     // /.***** constant variable *****
     
@@ -325,18 +331,21 @@
         // print_r($lastedMonth);
     }
     // /.check lasted month of area_cust table
-// -- pending here
+
     // ***** CALCULATE INDICES *****
     // MEA Customer
     {
         $sql = 'SELECT 
                     month AS no_month, 
-                    nocus AS mea_cust_month
+                    bc_cus AS bc_cust_month, 
+                    lb_cus AS lb_cust_month, 
+                    bp_cus AS bp_cust_month, 
+                    bu_cus AS bu_cust_month, 
+                    as_cus AS as_cust_month, 
                 FROM 
-                    discust 
+                    area_cust 
                 WHERE 
-                    district = 99 
-                    AND year = '.$selectedYear.' 
+                    year = '.$selectedYear.' 
                     AND month <= '.$lastedMonth;
         
         try {
@@ -347,9 +356,9 @@
         }
 
         // remove member in array
-        $accuMeaCust = array();
-        $eachMeaCust = array();
-
+        $accuICust = array();
+        $eachICust = array();
+// --- pending here 2Nov2020 3:21PM
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $accuMeaCust[$row['no_month']] = (float)$row['mea_cust_month'] + ($row['no_month'] == "1" ? 0 : (float)$accuMeaCust[(int)$row['no_month']-1]);
             $eachMeaCust[$row['no_month']] = (float)$row['mea_cust_month'];
