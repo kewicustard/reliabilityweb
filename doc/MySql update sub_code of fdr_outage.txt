@@ -1,0 +1,8 @@
+สร้าง field ชื่อ sub_code ในตาราง fdr_outage ก่อน โดยใช้โครงสร้างเดียวกับ sub_code ในตาราง nw_cause
+
+UPDATE 
+    fdr_outage 
+INNER JOIN 
+    nw_cause ON fdr_outage.t_cause = nw_cause.t_cause 
+SET
+    fdr_outage.sub_code = nw_cause.sub_code;

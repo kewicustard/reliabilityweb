@@ -1,0 +1,19 @@
+สร้าง field ชื่อ sustain int(5) NULL=yes ในตาราง lineoutage ก่อน
+
+UPDATE 
+    lineoutage 
+INNER JOIN 
+    fdr_outage 
+    	ON lineoutage.line = fdr_outage.line 
+        AND lineoutage.event_date = fdr_outage.event_date 
+        AND lineoutage.time_from = fdr_outage.time_from  
+SET
+    lineoutage.sustain = SUM(IF(fdr_outage.timeocb>1 && fdr_outage.feeder NOT LIKE "AZ%", 1, 0));
+
+
+UPDATE 
+    lineoutage 
+SET 
+    sustain = 0
+WHERE 
+    sustain IS NULL;

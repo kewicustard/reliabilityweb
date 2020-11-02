@@ -1,0 +1,8 @@
+สร้าง field ชื่อ sub_code ในตาราง lineoutage ก่อน โดยใช้โครงสร้างเดียวกับ sub_code ในตาราง nw_cause
+
+UPDATE 
+    lineoutage 
+INNER JOIN 
+    nw_cause ON lineoutage.t_cause = nw_cause.t_cause 
+SET
+    lineoutage.sub_code = nw_cause.sub_code;

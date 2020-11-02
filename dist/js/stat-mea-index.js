@@ -1,0 +1,1 @@
+displayHilightMenu('stat-mea-index');

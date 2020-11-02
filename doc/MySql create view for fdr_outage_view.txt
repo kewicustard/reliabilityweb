@@ -1,0 +1,53 @@
+DELIMITER $$
+
+CREATE FUNCTION `func_inc_var_session`() RETURNS INT
+    NO SQL
+    NOT DETERMINISTIC
+     BEGIN
+      SET @var := IFNULL(@var, 0) + 1;
+      RETURN @var;
+     END $$
+
+DELIMITER ;
+
+CREATE OR REPLACE VIEW fdr_outage_view AS 
+SELECT
+    func_inc_var_session() AS num, 
+    event_date,
+    feeder,
+    time_from,
+    time_to,
+    timeocb,
+    t_cause,
+    t_component,
+    group_type,
+    IFNULL(relay_show, "-") AS relay_show,
+    IFNULL(pole, "-") AS pole,
+    IFNULL(road, "-") AS road,
+    IFNULL(lateral, "-") AS lateral
+FROM
+    fdr_outage 
+UNION 
+SELECT 
+	func_inc_var_session() AS num,
+	a.date AS event_date, 
+	a.feeder, 
+	a.time_from, 
+	a.time_to, 
+	a.timeocb, 
+	b.t_cause, 
+	IFNULL(c.t_componen, "-") AS t_component, 
+	a.group_type, 
+	IFNULL(a.relay,"-") AS relay_show, 
+	IFNULL(a.pole,"-") AS pole, 
+	IFNULL(a.road,"-") AS road, 
+	IFNULL(a.lateral,"-") AS lateral 
+FROM 
+	outage_event_db a
+LEFT JOIN 
+	nw_cause b ON a.new_code = b.sub_code
+LEFT JOIN 
+	component c ON a.component = c.code 
+WHERE 
+	feeder IS NOT NULL 
+	AND feeder NOT LIKE 'AZ%';

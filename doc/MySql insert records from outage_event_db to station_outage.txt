@@ -1,0 +1,49 @@
+INSERT INTO station_outage(event_date, 
+    ABB, 
+    CB, 
+    time_from, 
+    time_to, 
+    timeocb, 
+    t_cause, 
+    relay_show, 
+    component, 
+    t_component, 
+    lateral, 
+    affected_fdrs, 
+    fdr_minutes, 
+    sub_code, 
+    sustain) 
+SELECT 
+    a.date AS event_date, 
+    a.abb, 
+    a.cb, 
+    a.time_from, 
+    MIN(a.time_to) AS time_to, 
+    MIN(a.timeocb) AS timeocb, 
+    c.t_cause, 
+    IFNULL(a.relay, "-") AS relay_show, 
+    IFNULL(d.code, "-") AS component,
+    IFNULL(d.t_componen, "-") AS t_component, 
+    IFNULL(a.lateral, "-") AS lateral, 
+    SUM(IF(b.event<>"S", 1, 0)) AS affected_fdrs, 
+    SUM(IF(b.event<>"S", b.time_eq, 0)) AS fdr_minutes, 
+    c.sub_code, 
+    SUM(IF(b.timeocb>1 && b.event<>"S", 1, 0)) AS sustain 
+FROM 
+    outage_event_db a 
+LEFT JOIN outage_event_db b 
+    ON a.date = b.date 
+        AND a.time_from = b.time_from 
+        AND a.cb = b.cb 
+LEFT JOIN nw_cause c 
+    ON a.new_code = c.sub_code
+LEFT JOIN component d 
+    ON a.component = d.code
+WHERE 
+    a.group_type = "S" 
+    AND b.group_type = "S" 
+    AND a.event = "H" 
+    AND b.event in("I", "O", "S") 
+    AND a.year = 2020 
+GROUP BY event_date, time_from, cb
+ORDER BY event_date, time_from, cb

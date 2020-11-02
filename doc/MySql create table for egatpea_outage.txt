@@ -1,0 +1,17 @@
+CREATE TABLE `egatpea_outage` (
+  `egatpea_outage_id` int(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `event_date` date DEFAULT NULL,
+  `utility` varchar(12) DEFAULT NULL,
+  `time_from` varchar(5) DEFAULT NULL,
+  `time_to` varchar(5) DEFAULT NULL,
+  `TIMEOCB` int(11) DEFAULT NULL,
+  `T_CAUSE` varchar(255) DEFAULT NULL,
+  `relay_show` varchar(255) DEFAULT NULL,
+  `COMPONENT` varchar(5) DEFAULT NULL,
+  `t_component` varchar(255) DEFAULT NULL,
+  `LATERAL` varchar(255) DEFAULT NULL,
+  `affected_fdrs` int(11) DEFAULT NULL,
+  `fdr_minutes` int(11) DEFAULT NULL,
+  `sub_code` varchar(5) NOT NULL,
+  `sustain` int(5) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

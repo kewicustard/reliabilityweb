@@ -1,0 +1,27 @@
+INSERT INTO fdr_outage(event_date, line, feeder, group_type, time_from, time_to, timeocb, t_cause, relay_show, district, pole, component, t_component, road, lateral, sub_code) 
+SELECT 
+	a.date AS event_date, 
+	a.line, 
+	a.feeder, 
+	a.group_type, 
+	a.time_from, 
+	a.time_to, 
+	a.timeocb, 
+	b.t_cause, 
+	a.relay AS relay_show, 
+	a.district, 
+	a.pole, 
+	a.component, 
+	c.t_componen AS t_component, 
+	a.road, 
+	a.lateral, 
+    b.sub_code
+FROM 
+	outage_event_db a
+LEFT JOIN 
+	nw_cause b ON a.new_code = b.sub_code
+LEFT JOIN 
+	component c ON a.component = c.code
+WHERE 
+	YEAR(date) >= 2019 
+	AND event IN('I', 'O');
