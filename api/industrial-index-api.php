@@ -14,11 +14,13 @@
             2020 => true,
         ]); // true has target, false hasn't target
 
-        define('industrial', [
-            'H', 'L', 'P', 'U', 'A'
+        define('industrialAbb', [
+            'H', 'L', 'P', 'U', 'A', 'I'
         ]);
 
-        var_dump(industrial);
+        define('industrialNotInYear', [
+            2018 => ['A'],
+        ]);
     }
     // /.***** constant variable *****
     
@@ -37,65 +39,16 @@
         $accuCustMin = array();
         $eachCustMin = array();
 
-        $saifiITarget = array();
-        // $saifiLSTarget = array();
-        // $saifiFTarget = array();
-        // $saifiETarget = array();
-        $saidiITarget = array();
-        // $saidiLSTarget = array();
-        // $saidiFTarget = array();
-        // $saidiETarget = array();
+        $saifiTarget = array();
+        $saidiTarget = array();
 
-        // $saifiMKpi = array();
-        // $saifiLSKpi = array();
-        // $saifiFKpi = array();
-        // $saifiEKpi = array();
-        // $saidiMKpi = array();
-        // $saidiLSKpi = array();
-        // $saidiFKpi = array();
-        // $saidiEKpi = array();
+        $saifiKpi = array();
+        $saidiKpi = array();
 
-        // $saifiMPrevious = array();
-        // $saidiMPrevious = array();
-        // $saifiMonthMPrevious = array();
-        // $saidiMonthMPrevious = array();
-        // $saifiLSPrevious = array();
-        // $saidiLSPrevious = array();
-        // $saifiMonthLSPrevious = array();
-        // $saidiMonthLSPrevious = array();
-        // $saifiFPrevious = array();
-        // $saidiFPrevious = array();
-        // $saifiMonthFPrevious = array();
-        // $saidiMonthFPrevious = array();
-        // $saifiEPrevious = array();
-        // $saidiEPrevious = array();
-        // $saifiMonthEPrevious = array();
-        // $saidiMonthEPrevious = array();
-
-        $saifiI = array();
-        $saidiI = array();
-        $saifiMonthI = array();
-        $saidiMonthI = array();
-        $saifiH = array();
-        $saidiH = array();
-        $saifiMonthH = array();
-        $saidiMonthH = array();
-        $saifiL = array();
-        $saidiL = array();
-        $saifiMonthL = array();
-        $saidiMonthL = array();
-        $saifiP = array();
-        $saidiP = array();
-        $saifiMonthP = array();
-        $saidiMonthP = array();
-        $saifiU = array();
-        $saidiU = array();
-        $saifiMonthU = array();
-        $saidiMonthU = array();
-        $saifiA = array();
-        $saidiA = array();
-        $saifiMonthA = array();
-        $saidiMonthA = array();
+        $saifi = array();
+        $saifiMonth = array();
+        $saidi = array();
+        $saidiMonth = array();
     }
     // /.***** declare variable *****
     
@@ -125,187 +78,15 @@
             $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
             for ($i = 1; $i <= 12; $i++) {
                 // saifi industrial threshold
-                $saifiITarget[$i] = (float)$row[0]['saifi_industrial'];
+                $saifiTarget[industrialAbb[5]][$i] = (float)$row[0]['saifi_industrial'];
                 // saidi industrial threshold
-                $saidiITarget[$i] = (float)$row[0]['saidi_industrial'];
+                $saidiTarget[industrialAbb[5]][$i] = (float)$row[0]['saidi_industrial'];
             }
-            // print_r($saifiITarget);
-            // print_r($saidiITarget);
-
+            
             // Create Array Response
-            $res['saifiITarget'] = $saifiITarget;
-            $res['saidiITarget'] = $saidiITarget;
-
-        }/* else { // MEA Indices Previous Year
-            $previousYear = $selectedYear-1;
-
-            // MEA Customer Previous Year
-            {
-                $sql = 'SELECT 
-                            month AS no_month, 
-                            nocus AS mea_cust 
-                        FROM 
-                            discust 
-                        WHERE 
-                            district = 99 
-                            AND year = '.$previousYear;
-    
-                try {
-                    $stmt = $db->prepare($sql);
-                    $stmt->execute();
-                } catch (PDOException $e) {
-                    echo 'Something wrong!!! '.$e->getMessage();
-                }
-                
-                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    $accuMeaCust[$row['no_month']] = (float)$row['mea_cust'] + ($row['no_month'] == "1" ? 0 : (float)$accuMeaCust[(int)$row['no_month']-1]);
-                    $eachMeaCust[$row['no_month']] = (float)$row['mea_cust'];
-                }
-            }
-
-            // MEA Strategy Previous Year
-            {
-                $sql = 'SELECT 
-                            month(date) AS no_month, 
-                            sum(cust_num) AS cust_num_month, 
-                            sum(cust_min) AS cust_min_month 
-                        FROM 
-                            indices_db 
-                        WHERE 
-                            timeocb > 1 
-                            AND event in("I", "O") 
-                            AND major is null 
-                            AND year(date) = '.$previousYear.' 
-                        GROUP BY 
-                            month(date)';
-    
-                try {
-                    $stmt = $db->prepare($sql);
-                    $stmt->execute();
-                } catch (PDOException $e) {
-                    echo 'Something wrong!!! '.$e->getMessage();
-                }
-                
-                $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row);
-                [$saifiMPrevious, $saidiMPrevious] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
-                [$saifiMonthMPrevious, $saidiMonthMPrevious] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
-                
-                // Create Array Response
-                $res['saifiMPrevious'] = $saifiMPrevious;
-                $res['saidiMPrevious'] = $saidiMPrevious;
-                $res['saifiMonthMPrevious'] = $saifiMonthMPrevious;
-                $res['saidiMonthMPrevious'] = $saidiMonthMPrevious;
-            }
-
-            // Transmission Line and Station Strategy Previous Year
-            {
-                $sql = 'SELECT 
-                            month(date) AS no_month, 
-                            sum(cust_num) AS cust_num_month, 
-                            sum(cust_min) AS cust_min_month
-                        FROM 
-                            indices_db 
-                        WHERE 
-                            timeocb > 1 
-                            AND event in("I", "O") 
-                            AND major is null 
-                            AND year(date) = '.$previousYear.' 
-                            AND group_type in("L", "S") 
-                        GROUP BY 
-                            month(date)';
-
-                try {
-                    $stmt = $db->prepare($sql);
-                    $stmt->execute();
-                } catch (PDOException $e) {
-                    echo 'Something wrong!!! '.$e->getMessage();
-                }
-
-                $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row);
-                [$saifiLSPrevious, $saidiLSPrevious] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
-                [$saifiMonthLSPrevious, $saidiMonthLSPrevious] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
-                
-                // Create Array Response
-                $res['saifiLSPrevious'] = $saifiLSPrevious;
-                $res['saidiLSPrevious'] = $saidiLSPrevious;
-                $res['saifiMonthLSPrevious'] = $saifiMonthLSPrevious;
-                $res['saidiMonthLSPrevious'] = $saidiMonthLSPrevious;
-            }
-
-            // Feeder Previous Year
-            {
-                $sql = 'SELECT 
-                            month(date) AS no_month, 
-                            sum(cust_num) AS cust_num_month, 
-                            sum(cust_min) AS cust_min_month
-                        FROM 
-                            indices_db 
-                        WHERE 
-                            timeocb > 1 
-                            AND event in("I", "O") 
-                            AND major is null 
-                            AND year(date) = '.$previousYear.' 
-                            AND group_type in("F") 
-                        GROUP BY 
-                            month(date)';
-
-                try {
-                    $stmt = $db->prepare($sql);
-                    $stmt->execute();
-                } catch (PDOException $e) {
-                    echo 'Something wrong!!! '.$e->getMessage();
-                }
-
-                $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row);
-                [$saifiFPrevious, $saidiFPrevious] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
-                [$saifiMonthFPrevious, $saidiMonthFPrevious] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
-                
-                // Create Array Response
-                $res['saifiFPrevious'] = $saifiFPrevious;
-                $res['saidiFPrevious'] = $saidiFPrevious;
-                $res['saifiMonthFPrevious'] = $saifiMonthFPrevious;
-                $res['saidiMonthFPrevious'] = $saidiMonthFPrevious;
-            }
-
-            // EGAT & PEA Previous Year
-            {
-                $sql = 'SELECT 
-                            month(date) AS no_month, 
-                            sum(cust_num) AS cust_num_month, 
-                            sum(cust_min) AS cust_min_month
-                        FROM 
-                            indices_db 
-                        WHERE 
-                            timeocb > 1 
-                            AND event in("I", "O") 
-                            AND major is null 
-                            AND year(date) = '.$previousYear.' 
-                            AND group_type in("E") 
-                        GROUP BY 
-                            month(date)';
-
-                try {
-                    $stmt = $db->prepare($sql);
-                    $stmt->execute();
-                } catch (PDOException $e) {
-                    echo 'Something wrong!!! '.$e->getMessage();
-                }
-
-                $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row);
-                [$saifiEPrevious, $saidiEPrevious] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
-                [$saifiMonthEPrevious, $saidiMonthEPrevious] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
-                
-                // Create Array Response
-                $res['saifiEPrevious'] = $saifiEPrevious;
-                $res['saidiEPrevious'] = $saidiEPrevious;
-                $res['saifiMonthEPrevious'] = $saifiMonthEPrevious;
-                $res['saidiMonthEPrevious'] = $saidiMonthEPrevious;
-            }
-        }*/
+            $res['saifiTarget'] = $saifiTarget;
+            $res['saidiTarget'] = $saidiTarget;
+        }
     }
     // /.Industrail Service Standard Target(Threshold)
 
@@ -333,7 +114,7 @@
     // /.check lasted month of area_cust table
 
     // ***** CALCULATE INDICES *****
-    // MEA Customer
+    // Industrial Customer
     {
         $sql = 'SELECT 
                     month AS no_month, 
@@ -342,6 +123,7 @@
                     bp_cus AS bp_cust_month, 
                     bu_cus AS bu_cust_month, 
                     as_cus AS as_cust_month, 
+                    indust_cus AS indust_cust_month 
                 FROM 
                     area_cust 
                 WHERE 
@@ -358,28 +140,40 @@
         // remove member in array
         $accuICust = array();
         $eachICust = array();
-// --- pending here 2Nov2020 3:21PM
+
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $accuMeaCust[$row['no_month']] = (float)$row['mea_cust_month'] + ($row['no_month'] == "1" ? 0 : (float)$accuMeaCust[(int)$row['no_month']-1]);
-            $eachMeaCust[$row['no_month']] = (float)$row['mea_cust_month'];
+            $accuICust[industrialAbb[0]][$row['no_month']] = (float)$row['bc_cust_month'] + ($row['no_month'] == "1" ? 0 : (float)$accuICust[industrialAbb[0]][(int)$row['no_month']-1]);
+            $eachICust[industrialAbb[0]][$row['no_month']] = (float)$row['bc_cust_month'];
+            $accuICust[industrialAbb[1]][$row['no_month']] = (float)$row['lb_cust_month'] + ($row['no_month'] == "1" ? 0 : (float)$accuICust[industrialAbb[1]][(int)$row['no_month']-1]);
+            $eachICust[industrialAbb[1]][$row['no_month']] = (float)$row['lb_cust_month'];
+            $accuICust[industrialAbb[2]][$row['no_month']] = (float)$row['bp_cust_month'] + ($row['no_month'] == "1" ? 0 : (float)$accuICust[industrialAbb[2]][(int)$row['no_month']-1]);
+            $eachICust[industrialAbb[2]][$row['no_month']] = (float)$row['bp_cust_month'];
+            $accuICust[industrialAbb[3]][$row['no_month']] = (float)$row['bu_cust_month'] + ($row['no_month'] == "1" ? 0 : (float)$accuICust[industrialAbb[3]][(int)$row['no_month']-1]);
+            $eachICust[industrialAbb[3]][$row['no_month']] = (float)$row['bu_cust_month'];
+            $accuICust[industrialAbb[4]][$row['no_month']] = (float)$row['as_cust_month'] + ($row['no_month'] == "1" ? 0 : (float)$accuICust[industrialAbb[4]][(int)$row['no_month']-1]);
+            $eachICust[industrialAbb[4]][$row['no_month']] = (float)$row['as_cust_month'];
+            $accuICust[industrialAbb[5]][$row['no_month']] = (float)$row['indust_cust_month'] + ($row['no_month'] == "1" ? 0 : (float)$accuICust[industrialAbb[5]][(int)$row['no_month']-1]);
+            $eachICust[industrialAbb[5]][$row['no_month']] = (float)$row['indust_cust_month'];
         }
     }
-    // /.MEA Customer
+    // /.Industrial Customer
 
-    // MEA Strategy
+    // Industrail indices
     {
         $sql = 'SELECT 
+                    nikom, 
                     month(date) AS no_month,
                     sum(cust_num) AS cust_num_month, 
                     sum(cust_min) AS cust_min_month 
                 FROM 
-                    indices_db 
+                    int_nikom  
                 WHERE 
                     timeocb > 1 
                     AND event in("I", "O") 
                     AND major IS NULL 
                     AND year(date) = '.$selectedYear.' 
                 GROUP BY
+                    nikom, 
                     month(date)';
         
         try {
@@ -391,161 +185,42 @@
         
         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
         [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row, (int)$lastedMonth);
-        [$saifiM, $saidiM] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
-        [$saifiMonthM, $saidiMonthM] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
+        [$saifi, $saidi] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuICust);
+        [$saifiMonth, $saidiMonth] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachICust);
         if (industrialTarget[$selectedYear]) {
-            [$saifiMKpi, $saidiMKpi] = calculateKPI($saifiM, $saidiM, $saifiMTarget, $saidiMTarget, "m");
-        } else {
+            [$saifiKpi, $saidiKpi] = calculateKPI($saifi, $saidi, $saifiTarget, $saidiTarget);
+        } /*else {
             [$saifiMKpi, $saidiMKpi] = calculateComparePreviousYear($saifiM, $saidiM, $saifiMPrevious, $saidiMPrevious);
-        }
+        }*/
+
+        // Use unset() function delete elements 
+        // if (!empty(industrialNotInYear[$selectedYear])) {// It has industrial not in selectedYear
+        //     array_map('deleteIndustrialArray', industrialNotInYear[$selectedYear]);
+        // }
+        // function deleteIndustrialArray($value) {
+        //     global $saifi, $saidi, $saifiMonth, $saidiMonth;
+        //     unset($saifi[$value]);
+        //     unset($saidi[$value]);
+        //     unset($saifiMonth[$value]);
+        //     unset($saidiMonth[$value]);
+        // }
 
         // Create Array Response
-        $res['saifiM'] = $saifiM;
-        $res['saidiM'] = $saidiM;
-        $res['saifiMonthM'] = $saifiMonthM;
-        $res['saidiMonthM'] = $saidiMonthM;
-        $res['saifiMKpi'] = $saifiMKpi;
-        $res['saidiMKpi'] = $saidiMKpi;
+        $res['saifi'] = $saifi;
+        $res['saidi'] = $saidi;
+        $res['saifiMonth'] = $saifiMonth;
+        $res['saidiMonth'] = $saidiMonth;
+        $res['saifiKpi'] = $saifiKpi;
+        $res['saidiKpi'] = $saidiKpi;
     }
-    // /.MEA Strategy
-
-    // Transmission Line and Station Strategy
-    {
-        $sql = 'SELECT 
-                    month(date) AS no_month,
-                    sum(cust_num) AS cust_num_month, 
-                    sum(cust_min) AS cust_min_month 
-                FROM 
-                    indices_db 
-                WHERE 
-                    timeocb > 1 
-                    AND event in("I", "O") 
-                    AND major IS NULL 
-                    AND year(date) = '.$selectedYear.' 
-                    AND group_type in("L", "S") 
-                GROUP BY
-                    month(date)';
-        
-        try {
-            $stmt = $db->prepare($sql);
-            $stmt->execute();
-        } catch (PDOException $e) {
-            echo 'Something wrong!!! '.$e->getMessage();
-        }
-        
-        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row, (int)$lastedMonth);
-        [$saifiLS, $saidiLS] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
-        [$saifiMonthLS, $saidiMonthLS] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
-        if (industrialTarget[$selectedYear]) {
-            [$saifiLSKpi, $saidiLSKpi] = calculateKPI($saifiLS, $saidiLS, $saifiLSTarget, $saidiLSTarget, "ls");
-        } else {
-            [$saifiLSKpi, $saidiLSKpi] = calculateComparePreviousYear($saifiLS, $saidiLS, $saifiLSPrevious, $saidiLSPrevious);
-        }
-
-        // Create Array Response
-        $res['saifiLS'] = $saifiLS;
-        $res['saidiLS'] = $saidiLS;
-        $res['saifiMonthLS'] = $saifiMonthLS;
-        $res['saidiMonthLS'] = $saidiMonthLS;
-        $res['saifiLSKpi'] = $saifiLSKpi;
-        $res['saidiLSKpi'] = $saidiLSKpi;
-    }
-    // /.Transmission Line and Station Strategy
-
-    // Feeder Strategy
-    {
-        $sql = 'SELECT 
-                    month(date) AS no_month,
-                    sum(cust_num) AS cust_num_month, 
-                    sum(cust_min) AS cust_min_month 
-                FROM 
-                    indices_db 
-                WHERE 
-                    timeocb > 1 
-                    AND event in("I", "O") 
-                    AND major IS NULL 
-                    AND year(date) = '.$selectedYear.' 
-                    AND group_type in("F") 
-                GROUP BY
-                    month(date)';
-        
-        try {
-            $stmt = $db->prepare($sql);
-            $stmt->execute();
-        } catch (PDOException $e) {
-            echo 'Something wrong!!! '.$e->getMessage();
-        }
-        
-        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row, (int)$lastedMonth);
-        [$saifiF, $saidiF] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
-        [$saifiMonthF, $saidiMonthF] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
-        if (industrialTarget[$selectedYear]) {
-            [$saifiFKpi, $saidiFKpi] = calculateKPI($saifiF, $saidiF, $saifiFTarget, $saidiFTarget, "f");
-        } else {
-            [$saifiFKpi, $saidiFKpi] = calculateComparePreviousYear($saifiF, $saidiF, $saifiFPrevious, $saidiFPrevious);
-        }
-        
-        // Create Array Response
-        $res['saifiF'] = $saifiF;
-        $res['saidiF'] = $saidiF;
-        $res['saifiMonthF'] = $saifiMonthF;
-        $res['saidiMonthF'] = $saidiMonthF;
-        $res['saifiFKpi'] = $saifiFKpi;
-        $res['saidiFKpi'] = $saidiFKpi;
-    }
-    // /.Feeder Strategy
-
-    // EGAT & PEA Strategy
-    {
-        $sql = 'SELECT 
-                    month(date) AS no_month,
-                    sum(cust_num) AS cust_num_month, 
-                    sum(cust_min) AS cust_min_month 
-                FROM 
-                    indices_db 
-                WHERE 
-                    timeocb > 1 
-                    AND event in("I", "O") 
-                    AND major IS NULL 
-                    AND year(date) = '.$selectedYear.' 
-                    AND group_type in("E") 
-                GROUP BY
-                    month(date)';
-        
-        try {
-            $stmt = $db->prepare($sql);
-            $stmt->execute();
-        } catch (PDOException $e) {
-            echo 'Something wrong!!! '.$e->getMessage();
-        }
-        
-        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row, (int)$lastedMonth);
-        [$saifiE, $saidiE] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
-        [$saifiMonthE, $saidiMonthE] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
-        if (industrialTarget[$selectedYear]) {
-            [$saifiEKpi, $saidiEKpi] = calculateKPI($saifiE, $saidiE, $saifiETarget, $saidiETarget, "e");
-        } else {
-            [$saifiEKpi, $saidiEKpi] = calculateComparePreviousYear($saifiE, $saidiE, $saifiEPrevious, $saidiEPrevious);
-        }
-
-        // Create Array Response
-        $res['saifiE'] = $saifiE;
-        $res['saidiE'] = $saidiE;
-        $res['saifiMonthE'] = $saifiMonthE;
-        $res['saidiMonthE'] = $saidiMonthE;
-        $res['saifiEKpi'] = $saifiEKpi;
-        $res['saidiEKpi'] = $saidiEKpi;
-    }
-    // /.EGAT & PEA Strategy
+    // /.Industrail indices
 
     // Create Array Response
     {
         $res['lasted_year'] = $selectedYear;
         $res['lasted_month'] = $lastedMonth;
-        $res['strategyHasTarget'] = industrialTarget[$selectedYear];
+        $res['industrialTarget'] = industrialTarget[$selectedYear];
+        $res['industrialNotInYear'] = empty(industrialNotInYear[$selectedYear]) ? null : industrialNotInYear[$selectedYear];
     }
 
     // Create and Send Json Response
@@ -559,106 +234,64 @@
 
     // ***** UTILITIES FUNCTION *****
     // Calculate Accumulative Indices
-    function calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust) {
-        for ($i=1; $i <= count($accuMeaCust); $i++) { 
-            $saifi[$i] = round($accuCustNum[$i]/$accuMeaCust[$i]*$i, 3);
-            $saidi[$i] = round($accuCustMin[$i]/$accuMeaCust[$i]*$i, 3);
+    function calculateAccuIndices($accuCustNum, $accuCustMin, $accuICust) {
+        // print_r($accuICust);
+        for ($n=0; $n < count($accuICust); $n++) {
+            for ($i=1; $i <= count($accuICust[industrialAbb[$n]]); $i++) { 
+                if ($accuICust[industrialAbb[$n]][$i] != 0) {
+                    $saifi[industrialAbb[$n]][$i] = round($accuCustNum[industrialAbb[$n]][$i]/$accuICust[industrialAbb[$n]][$i]*$i, 3);
+                    $saidi[industrialAbb[$n]][$i] = round($accuCustMin[industrialAbb[$n]][$i]/$accuICust[industrialAbb[$n]][$i]*$i, 3);
+                } else {
+                    $saifi[industrialAbb[$n]][$i] = 0.00;
+                    $saidi[industrialAbb[$n]][$i] = 0.00;
+                }
+            }
         }
         return [$saifi, $saidi];
     }
     // /.Calculate Accumulative Indices
 
     // Calculate Each Month Indices
-    function calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust) {
-        for ($i=1; $i <= count($eachMeaCust); $i++) { 
-            $saifi[$i] = round($eachCustNum[$i]/$eachMeaCust[$i], 3);
-            $saidi[$i] = round($eachCustMin[$i]/$eachMeaCust[$i], 3);
+    function calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachICust) {
+        for ($n=0; $n < count($eachICust); $n++) {
+            for ($i=1; $i <= count($eachICust[industrialAbb[$n]]); $i++) { 
+                if ($eachICust[industrialAbb[$n]][$i] != 0) {
+                    $saifi[industrialAbb[$n]][$i] = round($eachCustNum[industrialAbb[$n]][$i]/$eachICust[industrialAbb[$n]][$i], 3);
+                    $saidi[industrialAbb[$n]][$i] = round($eachCustMin[industrialAbb[$n]][$i]/$eachICust[industrialAbb[$n]][$i], 3);
+                } else {
+                    $saifi[industrialAbb[$n]][$i] = 0.00;
+                    $saidi[industrialAbb[$n]][$i] = 0.00;
+                }
+            }
         }
         return [$saifi, $saidi];
     }
     // /.Calculate Each Month Indices
 
     // Calculate KPI
-    function calculateKPI($saifi, $saidi, $saifiTarget, $saidiTarget, $system) {
-
-        if ($system != 'e') { // for mea, line&station, feeder
-            for ($key=1; $key <= count($saifi); $key++) { 
-                switch ($saifi[$key]) {
-                    case ($saifi[$key] <= $saifiTarget[5][$key]):
-                        $saifi_kpi[$key] = 5.00;
-                        break;
-                        
-                    case ($saifi[$key] <= $saifiTarget[4][$key]):
-                        $saifi_kpi[$key] = round( ($saifi[$key] - $saifiTarget[4][$key]) / ($saifiTarget[5][$key] - $saifiTarget[4][$key]) + 4, 2);
-                        break;
-
-                    case ($saifi[$key] <= $saifiTarget[3][$key]):
-                        $saifi_kpi[$key] = round( ($saifi[$key] - $saifiTarget[3][$key]) / ($saifiTarget[4][$key] - $saifiTarget[3][$key]) + 3, 2);
-                        break;
-                    
-                    case ($saifi[$key] <= $saifiTarget[2][$key]):
-                        $saifi_kpi[$key] = round( ($saifi[$key] - $saifiTarget[2][$key]) / ($saifiTarget[3][$key] - $saifiTarget[2][$key]) + 2, 2);
-                        break;
-                    
-                    case ($saifi[$key] <= $saifiTarget[1][$key]):
-                        $saifi_kpi[$key] = round( ($saifi[$key] - $saifiTarget[1][$key]) / ($saifiTarget[2][$key] - $saifiTarget[1][$key]) + 1, 2);
-                        break;
-                    
-                    case ($saifi[$key] > $saifiTarget[1][$key]):
-                        $saifi_kpi[$key] = 1.00;
-                        break;
-                    default:
-                        break;
-                }
-
-                switch ($saidi[$key]) {
-                    case ($saidi[$key] <= $saidiTarget[5][$key]):
-                        $saidi_kpi[$key] = 5.00;
-                        break;
-                        
-                    case ($saidi[$key] <= $saidiTarget[4][$key]):
-                        $saidi_kpi[$key] = round( ($saidi[$key] - $saidiTarget[4][$key]) / ($saidiTarget[5][$key] - $saidiTarget[4][$key]) + 4, 2);
-                        break;
-
-                    case ($saidi[$key] <= $saidiTarget[3][$key]):
-                        $saidi_kpi[$key] = round( ($saidi[$key] - $saidiTarget[3][$key]) / ($saidiTarget[4][$key] - $saidiTarget[3][$key]) + 3, 2);
-                        break;
-                    
-                    case ($saidi[$key] <= $saidiTarget[2][$key]):
-                        $saidi_kpi[$key] = round( ($saidi[$key] - $saidiTarget[2][$key]) / ($saidiTarget[3][$key] - $saidiTarget[2][$key]) + 2, 2);
-                        break;
-                    
-                    case ($saidi[$key] <= $saidiTarget[1][$key]):
-                        $saidi_kpi[$key] = round( ($saidi[$key] - $saidiTarget[1][$key]) / ($saidiTarget[2][$key] - $saidiTarget[1][$key]) + 1, 2);
-                        break;
-                    
-                    case ($saidi[$key] > $saidiTarget[1][$key]):
-                        $saidi_kpi[$key] = 1.00;
-                        break;
-                    default:
-                        break;
-                }
-            }       
-        } else { // for egat
-            for ($key=1; $key <= count($saifi) ; $key++) { 
-                if ($saifi[$key] <= $saifiTarget[$key]) {
-                    $saifi_kpi[$key] = "good";
+    function calculateKPI($saifi, $saidi, $saifiTarget, $saidiTarget) {
+        // for ($n=0; $n <= count($saifi) ; $n++) { 
+            $n = 5; // for only calculate all industrial 
+            for ($i=1; $i <= count($saifi[industrialAbb[$n]]); $i++) { 
+                if ($saifiTarget[industrialAbb[$n]][$i] != 0) {
+                    $saifiKpi[industrialAbb[$n]][$i] = round( ($saifi[industrialAbb[$n]][$i] - $saifiTarget[industrialAbb[$n]][$i]) / $saifiTarget[industrialAbb[$n]][$i] * 100, 2);
                 } else {
-                    $saifi_kpi[$key] = "bad";
+                    $saifiKpi[industrialAbb[$n]][$i] = $saifi[industrialAbb[$n]][$i] > 0 ? 100 : -100;
                 }
 
-                if ($saidi[$key] <= $saidiTarget[$key]) {
-                    $saidi_kpi[$key] = "good";
+                if ($saidiTarget[industrialAbb[$n]][$i] != 0) {
+                    $saidiKpi[industrialAbb[$n]][$i] = round( ($saidi[industrialAbb[$n]][$i] - $saidiTarget[industrialAbb[$n]][$i]) / $saidiTarget[industrialAbb[$n]][$i] * 100, 2);
                 } else {
-                    $saidi_kpi[$key] = "bad";
+                    $saidiKpi[industrialAbb[$n]][$i] = $saidi[industrialAbb[$n]][$i] > 0 ? 100 : -100;
                 }
-            }    
-        }
+            }
+        // }
 
-        return [$saifi_kpi, $saidi_kpi];
+        return [$saifiKpi, $saidiKpi];
     }
     // /.Calculate KPI
 
+    /*
     // Calculate compare with previous year
     function calculateComparePreviousYear($saifi, $saidi, $saifiPrevious, $saidiPrevious) {
         for ($key=1; $key <= count($saifi) ; $key++) { 
@@ -683,28 +316,42 @@
         return [$saifiComparePY, $saidiComparePY];
     }
     // /.Calculate compare with previous year
+    */
 
     // fectch PDO object to variable
     function fetchCustNumMin($row, $no_month=12) {        
-        $accuCustNum = array(0);
-        $eachCustNum = array(0);
-        $accuCustMin = array(0);
-        $eachCustMin = array(0);
-        
+        $accuCustNum = array();
+        $eachCustNum = array();
+        $accuCustMin = array();
+        $eachCustMin = array();
+        // initial value for all industrial "I"
+        for ($i=0; $i <= $no_month ; $i++) { 
+            $accuCustNum[industrialAbb[5]][$i] = 0.00;
+            $eachCustNum[industrialAbb[5]][$i] = 0.00;
+            $accuCustMin[industrialAbb[5]][$i] = 0.00;
+            $eachCustMin[industrialAbb[5]][$i] = 0.00;
+        }
+
         $x = 0; // count for index $row
-        for ($i = 1; $i <= $no_month; $i++) {
-            if (isset($row[$x]) && $row[$x]['no_month'] == $i) {
-                $accuCustNum[$i] = (float)$row[$x]['cust_num_month'] + (float)$accuCustNum[$i-1];
-                $eachCustNum[$i] = (float)$row[$x]['cust_num_month'];
-                $accuCustMin[$i] = (float)$row[$x]['cust_min_month'] + (float)$accuCustMin[$i-1];
-                $eachCustMin[$i] = (float)$row[$x]['cust_min_month'];
-                $x++;                                                            
-            } else {
-                $accuCustNum[$i] = $accuCustNum[$i-1];
-                $eachCustNum[$i] = 0.00;
-                $accuCustMin[$i] = $accuCustMin[$i-1];
-                $eachCustMin[$i] = 0.00;
-            }       
+        for ($n = 0; $n < count(industrialAbb)-1; $n++) {
+            for ($i = 1; $i <= $no_month; $i++) {
+                if (isset($row[$x]) && $row[$x]['nikom'] == industrialAbb[$n] && $row[$x]['no_month'] == $i) {
+                    $accuCustNum[industrialAbb[$n]][$i] = (float)$row[$x]['cust_num_month'] + ($i-1 == 0 ? 0 : $accuCustNum[industrialAbb[$n]][$i-1]);
+                    $eachCustNum[industrialAbb[$n]][$i] = (float)$row[$x]['cust_num_month'];
+                    $accuCustMin[industrialAbb[$n]][$i] = (float)$row[$x]['cust_min_month'] + ($i-1 == 0 ? 0 : $accuCustMin[industrialAbb[$n]][$i-1]);
+                    $eachCustMin[industrialAbb[$n]][$i] = (float)$row[$x]['cust_min_month'];
+                    $x++;
+                } else {
+                    $accuCustNum[industrialAbb[$n]][$i] = ($i-1 == 0 ? 0 : $accuCustNum[industrialAbb[$n]][$i-1]);
+                    $eachCustNum[industrialAbb[$n]][$i] = 0.00;
+                    $accuCustMin[industrialAbb[$n]][$i] = ($i-1 == 0 ? 0 : $accuCustMin[industrialAbb[$n]][$i-1]);
+                    $eachCustMin[industrialAbb[$n]][$i] = 0.00;
+                }
+                $accuCustNum[industrialAbb[5]][$i] += $accuCustNum[industrialAbb[$n]][$i];
+                $eachCustNum[industrialAbb[5]][$i] += $eachCustNum[industrialAbb[$n]][$i];
+                $accuCustMin[industrialAbb[5]][$i] += $accuCustMin[industrialAbb[$n]][$i];
+                $eachCustMin[industrialAbb[5]][$i] += $eachCustMin[industrialAbb[$n]][$i];
+            }
         }
         
         return array($accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin);

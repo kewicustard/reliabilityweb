@@ -112,14 +112,30 @@ $(function () {
         $('#tableCanvas6').find('tbody'),
     ];
 
-    const cardElements = [
-        document.querySelectorAll('.card')[1],
-        document.querySelectorAll('.card')[2],
-        document.querySelectorAll('.card')[3],
-        document.querySelectorAll('.card')[4],
-        document.querySelectorAll('.card')[5],
-        document.querySelectorAll('.card')[6],
-    ];
+    let cardElements;
+    if (document.querySelectorAll('.card').length == 9) {
+        cardElements = [
+            document.querySelectorAll('.card')[1],
+            document.querySelectorAll('.card')[2],
+            document.querySelectorAll('.card')[3],
+            document.querySelectorAll('.card')[4],
+            document.querySelectorAll('.card')[5],
+            document.querySelectorAll('.card')[6],
+            document.querySelectorAll('.card')[7],
+            document.querySelectorAll('.card')[8],
+        ];
+    } else {
+        cardElements = [
+            document.querySelectorAll('.card')[2],
+            document.querySelectorAll('.card')[3],
+            document.querySelectorAll('.card')[4],
+            document.querySelectorAll('.card')[5],
+            document.querySelectorAll('.card')[6],
+            document.querySelectorAll('.card')[7],
+            document.querySelectorAll('.card')[8],
+            document.querySelectorAll('.card')[9],
+        ];
+    }
 
     //Get Data from sepa-focus-group-index-api.php
     getData(parseInt($('.select2').val())); //Run at first time only

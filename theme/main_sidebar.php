@@ -1,4 +1,10 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<?php if (isset($_SESSION['user_login']) OR isset($_SESSION['admin_login'])) { ?>
+  <aside class="main-sidebar sidebar-light-primary elevation-4">
+<?php } else {?>
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+<?php } ?>
+
+<!-- <aside class="main-sidebar sidebar-dark-primary elevation-4"> -->
     <!-- Brand Logo -->
     <a href="index.php" class="brand-link">
       <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">

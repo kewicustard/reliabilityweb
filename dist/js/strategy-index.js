@@ -130,17 +130,32 @@ $(function () {
         $('#tableCanvas8').find('tbody'),
     ];
 
-    const cardElements = [
-        document.querySelectorAll('.card')[1],
-        document.querySelectorAll('.card')[2],
-        document.querySelectorAll('.card')[3],
-        document.querySelectorAll('.card')[4],
-        document.querySelectorAll('.card')[5],
-        document.querySelectorAll('.card')[6],
-        document.querySelectorAll('.card')[7],
-        document.querySelectorAll('.card')[8],
-    ];
-
+    let cardElements;
+    if (document.querySelectorAll('.card').length == 9) {
+        cardElements = [
+            document.querySelectorAll('.card')[1],
+            document.querySelectorAll('.card')[2],
+            document.querySelectorAll('.card')[3],
+            document.querySelectorAll('.card')[4],
+            document.querySelectorAll('.card')[5],
+            document.querySelectorAll('.card')[6],
+            document.querySelectorAll('.card')[7],
+            document.querySelectorAll('.card')[8],
+        ];
+    } else {
+        cardElements = [
+            document.querySelectorAll('.card')[2],
+            document.querySelectorAll('.card')[3],
+            document.querySelectorAll('.card')[4],
+            document.querySelectorAll('.card')[5],
+            document.querySelectorAll('.card')[6],
+            document.querySelectorAll('.card')[7],
+            document.querySelectorAll('.card')[8],
+            document.querySelectorAll('.card')[9],
+        ];
+    }
+    
+    
     //Get Data from strategy-index.php
     getData(parseInt($('.select2').val())); //Run at first time only
     $('.select2').change(() => {
@@ -169,7 +184,6 @@ $(function () {
     // Utility function
     function getData(selectedYear) {
         $.get('./api/strategy-index-api.php', {selectedYear : selectedYear-543}, function(res) {
-            console.log(res);
             dataStore[parseInt(res.lasted_year)+543] = res;// global variable
             chartCanvas.map((chartCanvasElem, index) => {
                 // Prepare data to plot
@@ -352,10 +366,10 @@ $(function () {
             } else {
                 if (yearData[chartKpiName[index]][yearData.lasted_month] == 'good') {
                     cardElements[index].classList.add('card-success');
-                    cardElements[index].children[0].children[0].children[0].innerText = 'ดีกว่าเกณฑ์';
+                    cardElements[index].children[0].children[0].children[0].innerText = ' ดีกว่าเกณฑ์';
                 } else {
                     cardElements[index].classList.add('card-danger');
-                    cardElements[index].children[0].children[0].children[0].innerText = 'สูงเกินเกณฑ์';
+                    cardElements[index].children[0].children[0].children[0].innerText = ' สูงเกินเกณฑ์';
                 }                
             }
         } else { //strategyHasTarget = false , as is no target in that year
@@ -391,7 +405,6 @@ $(function () {
                     }
                     tableData += '</tr>'
                 }    
-                tableData += '<tr>';
             } else { // for EGAT
                 for (let i = 1; i <= 3; i++) {
                     tableData += '<tr>';
@@ -413,7 +426,6 @@ $(function () {
                     }
                     tableData += '</tr>'
                 }    
-                tableData += '<tr>';
             }
         } else { //strategyHasTarget = false , as is no target in that year
             for (let i = 1; i <= 3; i++) {
@@ -436,7 +448,6 @@ $(function () {
                 }
                 tableData += '</tr>'
             }    
-            tableData += '<tr>';
         }
 
         tableElements[index].html(tableData)

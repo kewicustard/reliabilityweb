@@ -124,6 +124,7 @@
   /* Handling login functionality */
 	function loginForm() {
     var data = $("form").serialize();
+    console.log(data)
 		$.ajax({				
 			type : 'POST',
 			url  : 'login_db.php',
@@ -133,9 +134,11 @@
 				if($.trim(response) === "1"){
 					// console.log('login success');
 					location.href = "index.php";
-				} else {									
+				} else {
           // console.error('login fail');
+          console.log(response);
           let errorMsgElem = document.querySelector(".social-auth-links");
+          console.log(response);
           if (!errorMsgElem) {
             let errorMsg = `<div class="social-auth-links mb-0">
                             <div class="alert alert-danger alert-dismissible mb-0">

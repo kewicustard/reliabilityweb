@@ -54,73 +54,29 @@ $(function () {
         $('#chartCanvas12').get(0).getContext('2d'),
     ];
     const chartIndexName = [
-        'saifiI',
-        'saidiI',
-        'saifiH',
-        'saidiH',
-        'saifiL',
-        'saidiL',
-        'saifiP',
-        'saidiP',
-        'saifiU',
-        'saidiU',
-        'saifiA',
-        'saidiA',
+        'saifi',
+        'saidi',
     ];
     const chartIndexMonthName = [
-        'saifiMonthI',
-        'saidiMonthI',
-        'saifiMonthH',
-        'saidiMonthH',
-        'saifiMonthL',
-        'saidiMonthL',
-        'saifiMonthP',
-        'saidiMonthP',
-        'saifiMonthU',
-        'saidiMonthU',
-        'saifiMonthA',
-        'saidiMonthA',
+        'saifiMonth',
+        'saidiMonth',
     ];
-    // const chartIndexPreviousName = [
-    //     'saifiMPrevious',
-    //     'saidiMPrevious',
-    //     'saifiLSPrevious',
-    //     'saidiLSPrevious',
-    //     'saifiFPrevious',
-    //     'saidiFPrevious',
-    //     'saifiEPrevious',
-    //     'saidiEPrevious',
-    // ];
-    // const chartIndexMonthPreviousName = [
-    //     'saifiMonthMPrevious',
-    //     'saidiMonthMPrevious',
-    //     'saifiMonthLSPrevious',
-    //     'saidiMonthLSPrevious',
-    //     'saifiMonthFPrevious',
-    //     'saidiMonthFPrevious',
-    //     'saifiMonthEPrevious',
-    //     'saidiMonthEPrevious',
-    // ];
+    const industrialAbb = [
+        'I',
+        'H',
+        'L',
+        'P',
+        'U',
+        'A',
+    ];
     const chartTargetName = [
-        'saifiITarget',
-        'saidiITarget',
-        // 'saifiLSTarget',
-        // 'saidiLSTarget',
-        // 'saifiFTarget',
-        // 'saidiFTarget',
-        // 'saifiETarget',
-        // 'saidiETarget',
+        'saifiTarget',
+        'saidiTarget',
     ];
-    // const chartKpiName = [
-    //     'saifiMKpi',
-    //     'saidiMKpi',
-    //     'saifiLSKpi',
-    //     'saidiLSKpi',
-    //     'saifiFKpi',
-    //     'saidiFKpi',
-    //     'saifiEKpi',
-    //     'saidiEKpi',
-    // ];
+    const chartKpiName = [
+        'saifiKpi',
+        'saidiKpi',
+    ];
     const chartBarColor = [
         'rgba(245, 105, 84, 0.9)',
         'rgba(245, 105, 84, 0.9)',
@@ -150,20 +106,40 @@ $(function () {
         $('#tableCanvas12').find('tbody'),
     ];
 
-    const cardElements = [
-        document.querySelectorAll('.card')[1],
-        document.querySelectorAll('.card')[2],
-        document.querySelectorAll('.card')[3],
-        document.querySelectorAll('.card')[4],
-        document.querySelectorAll('.card')[5],
-        document.querySelectorAll('.card')[6],
-        document.querySelectorAll('.card')[7],
-        document.querySelectorAll('.card')[8],
-        document.querySelectorAll('.card')[9],
-        document.querySelectorAll('.card')[10],
-        document.querySelectorAll('.card')[11],
-        document.querySelectorAll('.card')[12],
-    ];
+    
+
+    let cardElements;
+    if (document.querySelectorAll('.card').length == 13) {
+        cardElements = [
+            document.querySelectorAll('.card')[1],
+            document.querySelectorAll('.card')[2],
+            document.querySelectorAll('.card')[3],
+            document.querySelectorAll('.card')[4],
+            document.querySelectorAll('.card')[5],
+            document.querySelectorAll('.card')[6],
+            document.querySelectorAll('.card')[7],
+            document.querySelectorAll('.card')[8],
+            document.querySelectorAll('.card')[9],
+            document.querySelectorAll('.card')[10],
+            document.querySelectorAll('.card')[11],
+            document.querySelectorAll('.card')[12],
+        ];
+    } else {
+        cardElements = [
+            document.querySelectorAll('.card')[2],
+            document.querySelectorAll('.card')[3],
+            document.querySelectorAll('.card')[4],
+            document.querySelectorAll('.card')[5],
+            document.querySelectorAll('.card')[6],
+            document.querySelectorAll('.card')[7],
+            document.querySelectorAll('.card')[8],
+            document.querySelectorAll('.card')[9],
+            document.querySelectorAll('.card')[10],
+            document.querySelectorAll('.card')[11],
+            document.querySelectorAll('.card')[12],
+            document.querySelectorAll('.card')[13],
+        ];
+    }
 
     //Get Data from strategy-index.php
     getData(parseInt($('.select2').val())); //Run at first time only
@@ -172,15 +148,18 @@ $(function () {
         $('.overlay').removeClass('d-none');
 
         if (dataStore[parseInt($('.select2').val())]) {
+            // Hide and show industrial not in selectedYear
+            hideShowIndustrailElem({selectedYear: parseInt($('.select2').val())});
+            // Update chart and table
             chartCanvas.map((chartCanvasElem, index) => {
                 // Prepare data to plot
-                let {chartData, chartOptions} = prepareDataPlot({selectedYear: parseInt($('.select2').val()), index});
+                let {chartData, chartOptions} = prepareDataPlot({selectedYear: parseInt($('.select2').val()), industrialAbb : industrialAbb[parseInt(index/2)], index});
                 // Charts plots
                 chartPlot({chartData, chartOptions, chartCanvasElem, index});
                 // Dislay Kpi Card
-                displayKpiCard({selectedYear: parseInt($('.select2').val()), index});
+                (industrialAbb[parseInt(index/2)] == 'I') ? displayKpiCard({selectedYear: parseInt($('.select2').val()), index}) : null;
                 // Table is filled data
-                fillDataTable({selectedYear: parseInt($('.select2').val()), index});
+                fillDataTable({selectedYear: parseInt($('.select2').val()), industrialAbb : industrialAbb[parseInt(index/2)], index});
             });
             // Remove All Overlay Loading
             $('.overlay').addClass('d-none');
@@ -192,72 +171,43 @@ $(function () {
 
     // Utility function
     function getData(selectedYear) {
-        $.get('./api/inudstrial-index-api.php', {selectedYear : selectedYear-543}, function(res) {
+        $.get('./api/industrial-index-api.php', {selectedYear : selectedYear-543}, function(res) {
             dataStore[parseInt(res.lasted_year)+543] = res;// global variable
+            // Hide and show industrial not in selectedYear
+            hideShowIndustrailElem({selectedYear});
+            // Create chart and table
             chartCanvas.map((chartCanvasElem, index) => {
                 // Prepare data to plot
-                let {chartData, chartOptions} = prepareDataPlot({selectedYear, index});
+                let {chartData, chartOptions} = prepareDataPlot({selectedYear, industrialAbb : industrialAbb[parseInt(index/2)], index});
                 // Charts plots
                 chartPlot({chartData, chartOptions, chartCanvasElem, index});
                 // Dislay Kpi Card
-                displayKpiCard({selectedYear, index});
+                (industrialAbb[parseInt(index/2)] == 'I') ? displayKpiCard({selectedYear, index}) : null;
                 // Table is filled data
-                fillDataTable({selectedYear, index});
+                fillDataTable({selectedYear, industrialAbb : industrialAbb[parseInt(index/2)], index});
             });
             // Remove All Overlay Loading
             $('.overlay').addClass('d-none');
         });
     }
 
-    function prepareDataPlot({selectedYear, index}) {// get data from global variable
+    function prepareDataPlot({selectedYear, industrialAbb, index}) {// get data from global variable
         const yearData = dataStore[selectedYear];
-        let accuIndex = Object.values(yearData[chartIndexName[index]]);
-        let monthIndex = Object.values(yearData[chartIndexMonthName[index]]);
+        let indexMod = parseInt(index % 2);
+        let accuIndex = Object.values(yearData[chartIndexName[indexMod]][industrialAbb]);
+        let monthIndex = Object.values(yearData[chartIndexMonthName[indexMod]][industrialAbb]);
         let subDatasets;
-        if (yearData.strategyHasTarget) {
-            if (index < 6) { // for any Target
-                let Target5 = Object.values(yearData[chartTargetName[index]][5]);
-                let Target1 = Object.values(yearData[chartTargetName[index]][1]);
+        if (yearData.industrialTarget) {
+            if (industrialAbb != 'I') { // for any Target
+                subDatasets = [];
+            } else { // for all industrial Target
+                let Target = Object.values(yearData[chartTargetName[indexMod]][industrialAbb]);
                 subDatasets = [
                     {
                         type                : 'line',
                         // order               : 1,
                         fill                : '+1',
-                        label               : chartIndexName[index].slice(0, 5).toUpperCase()+' 5',
-                        backgroundColor     : 'rgba(245, 105, 84, 0.3)',
-                        borderColor         : 'rgba(245, 105, 84, 1)',
-                        borderWidth         : 1,
-                        pointRadius         : 2,
-                        pointColor          : 'rgba(210, 214, 222, 1)',
-                        pointStrokeColor    : '#c1c7d1',
-                        pointHighlightFill  : '#fff',
-                        pointHighlightStroke: 'rgba(220,220,220,1)',
-                        data                : Target5
-                    },
-                    {
-                        type                : 'line',
-                        // order               : 1,
-                        fill                : false,
-                        label               : chartIndexName[index].slice(0, 5).toUpperCase()+' 1',
-                        backgroundColor     : 'rgba(245, 105, 84, 0.3)',
-                        borderColor         : 'rgba(245, 105, 84, 1)',
-                        borderWidth         : 1,
-                        pointRadius         : 2,
-                        pointColor          : 'rgba(210, 214, 222, 1)',
-                        pointStrokeColor    : '#c1c7d1',
-                        pointHighlightFill  : '#fff',
-                        pointHighlightStroke: 'rgba(220,220,220,1)',
-                        data                : Target1
-                    }
-                ];
-            } else { // for EGAT Target
-                let Target = Object.values(yearData[chartTargetName[index]]);
-                subDatasets = [
-                    {
-                        type                : 'line',
-                        // order               : 1,
-                        fill                : '+1',
-                        label               : chartIndexName[index].slice(0, 5).toUpperCase() + ' Target',
+                        label               : 'เกณฑ์ ' + chartIndexName[indexMod].slice(0, 5).toUpperCase(),
                         backgroundColor     : 'rgba(245, 105, 84, 0.3)',
                         borderColor         : 'rgba(245, 105, 84, 1)',
                         borderWidth         : 1,
@@ -269,27 +219,7 @@ $(function () {
                         data                : Target
                     },
                 ]
-            }
-            
-        } else { //strategyHasTarget = false , as is no target in that year
-            Target = Object.values(yearData[chartIndexPreviousName[index]]);
-            subDatasets = [
-                {
-                    type                : 'line',
-                    // order               : 1,
-                    fill                : false,
-                    label               : chartIndexName[index].slice(0, 5).toUpperCase() + ' ' + (selectedYear-1).toString(),
-                    backgroundColor     : 'rgba(245, 105, 84, 0.2)',
-                    borderColor         : 'rgba(245, 105, 84, 1)',
-                    borderWidth         : 1,
-                    pointRadius         : 2,
-                    pointColor          : 'rgba(210, 214, 222, 1)',
-                    pointStrokeColor    : '#c1c7d1',
-                    pointHighlightFill  : '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data                : Target
-                }
-            ];
+            }   
         }
         
         let chartData = {
@@ -298,7 +228,7 @@ $(function () {
                 {
                     type                : 'bar',
                     // order               : 2,
-                    label               : chartIndexName[index].slice(0, 5).toUpperCase(),
+                    label               : chartIndexName[indexMod].slice(0, 5).toUpperCase(),
                     backgroundColor     : chartBarColor[index],
                     borderColor         : chartBarColor[index],
                     pointRadius         : false,
@@ -311,7 +241,7 @@ $(function () {
                 {
                     type                : 'bar',
                     // order               : 3,
-                    label               : chartIndexName[index].slice(0, 5).toUpperCase() + ' Month',
+                    label               : chartIndexName[indexMod].slice(0, 5).toUpperCase() + ' Month',
                     backgroundColor     : 'rgba(210, 214, 222, 1)',
                     borderColor         : 'rgba(210, 214, 222, 1)',
                     pointRadius         : false,
@@ -366,103 +296,60 @@ $(function () {
     function displayKpiCard({selectedYear, index}) {
         const yearData = dataStore[selectedYear];
         cardElements[index].classList.remove(cardElements[index].classList[1]);
-        if (yearData.strategyHasTarget) {
-            if (index < 6) {
-                yearData[chartKpiName[index]][yearData.lasted_month] == 5 ? 
-                    cardElements[index].classList.add('card-success') : 
-                    cardElements[index].classList.add('card-danger');
-                cardElements[index].children[0].children[0].children[0].innerText = ' คิดเป็นคะแนน ' + yearData[chartKpiName[index]][yearData.lasted_month].toFixed(2);
+        if (yearData.industrialTarget) {
+            if (yearData[chartKpiName[index]]['I'][yearData.lasted_month] < 0) {
+                cardElements[index].classList.add('card-success');
+                cardElements[index].children[0].children[0].children[0].innerText = ' ดีกว่าเกณฑ์';
             } else {
-                if (yearData[chartKpiName[index]][yearData.lasted_month] == 'good') {
-                    cardElements[index].classList.add('card-success');
-                    cardElements[index].children[0].children[0].children[0].innerText = 'ดีกว่าเกณฑ์';
-                } else {
-                    cardElements[index].classList.add('card-danger');
-                    cardElements[index].children[0].children[0].children[0].innerText = 'สูงเกินเกณฑ์';
-                }                
-            }
-        } else { //strategyHasTarget = false , as is no target in that year
-            yearData[chartKpiName[index]][yearData.lasted_month] <= 0 ? 
-                cardElements[index].classList.add('card-success') : 
                 cardElements[index].classList.add('card-danger');
-            cardElements[index].children[0].children[0].children[0].innerText = ' คิดเป็น ' + yearData[chartKpiName[index]][yearData.lasted_month].toFixed(2) + '% เทียบกับปี ' + (selectedYear-1).toString();
+                cardElements[index].children[0].children[0].children[0].innerText = ' สูงเกินเกณฑ์';
+            }
         }
     }
 
-    function fillDataTable({selectedYear, index}) {
+    function fillDataTable({selectedYear, industrialAbb, index}) {
         const yearData = dataStore[selectedYear];
+        let indexMod = parseInt(index % 2);
         let tableData;
-        if (yearData.strategyHasTarget) {
-            if (index < 6) {
-                for (let i = 1; i <= 7; i++) {
-                    tableData += '<tr>';
-                    if (i < 6) {
-                        tableData += '<th>KPI' + i + '</th>';
-                        Object.values(yearData[chartTargetName[index]][i]).map(value => {
-                            tableData += '<td>' + value.toFixed(3) + '</td>';
-                        })
-                    } else if (i == 6) {
-                        tableData += '<th>' + chartIndexName[index].slice(0, 5).toUpperCase() + '</th>';
-                        Object.values(yearData[chartIndexName[index]]).map(value => {
-                            tableData += '<td>' + value.toFixed(3) + '</td>';
-                        })
-                    } else {
-                        tableData += '<th>KPI</th>';
-                        Object.values(yearData[chartKpiName[index]]).map(value => {
-                            tableData += '<td>' + value.toFixed(3) + '</td>';
-                        })
-                    }
-                    tableData += '</tr>'
-                }    
+        if (yearData.industrialTarget) {
+            if (index > 1) {
                 tableData += '<tr>';
-            } else { // for EGAT
-                for (let i = 1; i <= 3; i++) {
-                    tableData += '<tr>';
-                    if (i < 2) {
-                        tableData += '<th>KPI' + i + '</th>';
-                        Object.values(yearData[chartTargetName[index]]).map(value => {
-                            tableData += '<td>' + value.toFixed(3) + '</td>';
-                        })
-                    } else if (i == 2) {
-                        tableData += '<th>' + chartIndexName[index].slice(0, 5).toUpperCase() + '</th>';
-                        Object.values(yearData[chartIndexName[index]]).map(value => {
-                            tableData += '<td>' + value.toFixed(3) + '</td>';
-                        })
-                    } else {
-                        tableData += '<th>KPI</th>';
-                        Object.values(yearData[chartKpiName[index]]).map(value => {
-                            tableData += '<td>' + value + '</td>';
-                        })
-                    }
-                    tableData += '</tr>'
-                }    
+                tableData += '<th>' + chartIndexName[indexMod].slice(0, 5).toUpperCase() + '</th>';
+                Object.values(yearData[chartIndexName[indexMod]][industrialAbb]).map(value => {
+                    tableData += '<td>' + value.toFixed(3) + '</td>';
+                })
+                tableData += '</tr>';
+
+            } else { // for all industrial
                 tableData += '<tr>';
+                tableData += '<th>เกณฑ์</th>';
+                Object.values(yearData[chartTargetName[indexMod]][industrialAbb]).map(value => {
+                    tableData += '<td>' + value.toFixed(3) + '</td>';
+                })
+                tableData += '</tr>';
+                tableData += '<tr>';
+                tableData += '<th>' + chartIndexName[indexMod].slice(0, 5).toUpperCase() + '</th>';
+                Object.values(yearData[chartIndexName[indexMod]][industrialAbb]).map(value => {
+                    tableData += '<td>' + value.toFixed(3) + '</td>';
+                })
+                tableData += '</tr>';
             }
-        } else { //strategyHasTarget = false , as is no target in that year
-            for (let i = 1; i <= 3; i++) {
-                tableData += '<tr>';
-                if (i < 2) {
-                    tableData += '<th>' + chartIndexName[index].slice(0, 5).toUpperCase() + ' ' + (selectedYear-1).toString() + '</th>';
-                    Object.values(yearData[chartIndexPreviousName[index]]).map(value => {
-                        tableData += '<td>' + value.toFixed(3) + '</td>';
-                    })
-                } else if (i == 2) {
-                    tableData += '<th>' + chartIndexName[index].slice(0, 5).toUpperCase() + '</th>';
-                    Object.values(yearData[chartIndexName[index]]).map(value => {
-                        tableData += '<td>' + value.toFixed(3) + '</td>';
-                    })
-                } else {
-                    tableData += '<th>% (- คือดีกว่า)</th>';
-                    Object.values(yearData[chartKpiName[index]]).map(value => {
-                        tableData += '<td>' + value.toFixed(2) + '</td>';
-                    })
-                }
-                tableData += '</tr>'
-            }    
-            tableData += '<tr>';
         }
 
         tableElements[index].html(tableData)
+    }
+
+    function hideShowIndustrailElem({selectedYear}) {
+        const yearData = dataStore[selectedYear];
+        let rowElem = Array.from(document.querySelectorAll('section.row'))[5];
+        // Hide or show Asia suvannabhumi
+        if (yearData['industrialNotInYear'] == null) {
+            rowElem.classList.remove('d-none');
+            rowElem.previousElementSibling.classList.remove('d-none');
+        } else {
+            rowElem.classList.add('d-none');
+            rowElem.previousElementSibling.classList.add('d-none');
+        }
     }
     // /.Utility function
 });

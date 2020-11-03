@@ -152,14 +152,28 @@ $(function () {
         $('#tableCanvas3').find('tbody'),
         $('#tableCanvas4').find('tbody'),
     ];
-    const cardAllDistElements = [
-        document.querySelectorAll('.card')[1],
-        document.querySelectorAll('.card')[2],
-    ];
-    const cardEachDistElements = [
-        document.querySelectorAll('.card')[3],
-        document.querySelectorAll('.card')[4],
-    ];
+    
+    let cardAllDistElements;
+    let cardEachDistElements;
+    if (document.querySelectorAll('.card').length == 5) {
+        cardAllDistElements = [
+            document.querySelectorAll('.card')[1],
+            document.querySelectorAll('.card')[2],
+        ];
+        cardEachDistElements = [
+            document.querySelectorAll('.card')[3],
+            document.querySelectorAll('.card')[4],
+        ];
+    } else {
+        cardAllDistElements = [
+            document.querySelectorAll('.card')[2],
+            document.querySelectorAll('.card')[3],
+        ];
+        cardEachDistElements = [
+            document.querySelectorAll('.card')[4],
+            document.querySelectorAll('.card')[5],
+        ];
+    }
     
     //Get Data from district-strategy-index-api.php
     getData(parseInt(selectedYearElem.options[selectedYearElem.selectedIndex].text)); //Run at first time only

@@ -2,6 +2,8 @@
     session_start();
     date_default_timezone_set('Asia/Bangkok');
 
+    require_once("../connection-variable.php");
+
     // ***** constant variable *****
     {
         define('thai_day_arr', array("อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"));
@@ -58,10 +60,10 @@
     );
     //เชื่อต่อฐานข้อมูล
     $sql_details = array(
-    'user' => 'root',
-    'pass' => '',
-    'db'   => 'statistics_database',
-    'host' => 'localhost'
+        'user' => $db_user,
+        'pass' => $db_password,
+        'db'   => $db_name,
+        'host' => $db_host
     );
     // เรียกใช้ไฟล์ spp.class.php
     require( '../ssp.class.php' );
