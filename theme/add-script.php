@@ -1,0 +1,1 @@
+<script src="dist/js/handle-main-sidebar.js"></script>

@@ -23,165 +23,6 @@
         </div>
       </div>
 
-      <!-- unofficial -->
-      <?php if (isset($_SESSION['user_login']) OR isset($_SESSION['admin_login'])) : ?>
-      <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="info">
-          <a href="#" class="d-block" id='unoffcial_indices'><strong>ความเชื่อถือได้ (ไม่เป็นทางการ)</strong></a>
-        </div>
-      </div>
-
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-
-          <!-- ตรวจสอบดัชนีฯ -->
-          
-            <li class="nav-header"><strong>ตรวจสอบดัชนีฯ</strong></li>
-            <!-- ดัชนีความเชื่อถือได้ -->
-            <li class="nav-item has-treeview">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-chart-bar"></i>
-                <p>
-                  <strong>ดัชนีฯ</strong>
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item" id="verify-strategy-index">
-                  <a href="verify-strategy-index.php" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p><strong>ยุทธศาสตร์ (S)</strong></p>
-                  </a>
-                </li>
-                <li class="nav-item" id="verify-sepa-index">
-                  <a href="verify-sepa-index.php" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p><strong>SEPA (E)</strong></p>
-                  </a>
-                </li>
-                <li class="nav-item" id="verify-sepa-focus-group-index">
-                  <a href="verify-sepa-focus-group-index.php" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p><strong>SEPA Focus Group (E)</strong></p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <!-- ดัชนีความเชื่อถือได้ ราย ฟข.-->
-            <li class="nav-item has-treeview">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-chart-bar"></i>
-                <p>
-                  <strong>ดัชนีฯ ราย ฟข.</strong>
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item" id="verify-district-strategy-index">
-                  <a href="strategy-index.php" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p><strong>ยุทธศาสตร์ (S)</strong></p>
-                  </a>
-                </li>
-                <li class="nav-item" id="verify-district-sepa-index">
-                  <a href="sepa-index.php" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p><strong>SEPA (E)</strong></p>
-                  </a>
-                </li>
-                <li class="nav-item" id="verify-district-sepa-focus-group-index">
-                  <a href="sepa-focus-group-index.php" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p><strong>SEPA Focus Group (E)</strong></p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-          <?php endif; ?>
-
-          <!-- ตรวจสอบดัชนีฯ -->
-          <?php if (isset($_SESSION['user_login']) OR isset($_SESSION['admin_login'])) : ?>
-            <li class="nav-header"><strong>ตรวจสอบเหตุการณ์คำนวณดัชนีฯ</strong></li>
-            <!-- ตรวจสอบเหตุการณ์ไฟฟ้าดับ -->
-            <li class="nav-item has-treeview">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-chart-bar"></i>
-                <p>
-                  <strong>เหตุการณ์ไฟฟ้าดับ</strong>
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item" id="verify-stat-f">
-                  <a href="verify-strategy-index.php" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p><strong>สายป้อน</strong></p>
-                  </a>
-                </li>
-                <!-- <li class="nav-item" id="verify-stat-ts">
-                  <a href="verify-sepa-index.php" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p><strong>สายส่ง และสถานีฯ</strong></p>
-                  </a>
-                </li> -->
-              </ul>
-            </li>
-          <?php endif; ?>
-
-          <!-- <li class="nav-header">สถิติและข้อมูลความเชื่อถือได้</li> -->
-          <!-- สถิติและข้อมูลความเชื่อถือได้ -->
-          <!-- <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-chart-bar"></i>
-              <p>
-                สถิติและข้อมูลฯ
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item" id="stat-mea-index">
-                <a href="stat-mea-index.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>กฟน.</p>
-                </a>
-              </li>
-              <li class="nav-item" id="search-stat-f">
-                <a href="strategy-index.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>สายป้อน</p>
-                </a>
-              </li>
-              <li class="nav-item" id="search-stat-ts">
-                <a href="sepa-index.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>สายส่ง และสถานีฯ</p>
-                </a>
-              </li>
-            </ul>
-          </li> -->
-
-        </ul>
-      </nav>
-      <!-- /.sidebar-menu -->
-      <!-- /.unofficial -->
-
-      <?php if (isset($_SESSION['user_login']) OR isset($_SESSION['admin_login'])) : ?>
-      <hr class="mt-0">
-      <?php endif; ?>
-
-      <?php if (isset($_SESSION['user_login']) OR isset($_SESSION['admin_login'])) : ?>
-      <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="info">
-          <a href="#" class="d-block" id='offcial_indices'><strong>ความเชื่อถือได้ (ทางการ)</strong></a>
-        </div>
-      </div>
-      <?php endif; ?>
-
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
@@ -197,7 +38,7 @@
             </a>
           </li>
 
-          <li class="nav-header">ดัชนีความเชื่อถือได้</li>
+          <li class="nav-header">ดัชนีความเชื่อถือได้ต่างๆ</li>
           <!-- ดัชนีความเชื่อถือได้ -->
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
@@ -264,8 +105,72 @@
               </li>
             </ul>
           </li>
+          <!-- ตรวจสอบดัชนีฯ -->
+          <?php if (isset($_SESSION['user_login']) OR isset($_SESSION['admin_login'])) : ?>
+            <li class="nav-header">ตรวจสอบดัชนีฯ ต่างๆ</li>
+            <!-- ดัชนีความเชื่อถือได้ -->
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-chart-bar"></i>
+                <p>
+                  ตรวจสอบดัชนีฯ
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item" id="verify-strategy-index">
+                  <a href="verify-strategy-index.php" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>ยุทธศาสตร์ (S)</p>
+                  </a>
+                </li>
+                <li class="nav-item" id="verify-sepa-index">
+                  <a href="verify-sepa-index.php" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>SEPA (E)</p>
+                  </a>
+                </li>
+                <li class="nav-item" id="verify-sepa-focus-group-index">
+                  <a href="verify-sepa-focus-group-index.php" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>SEPA Focus Group (E)</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <!-- ดัชนีความเชื่อถือได้ ราย ฟข.-->
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-chart-bar"></i>
+                <p>
+                  ตรวจสอบดัชนีฯ ราย ฟข.
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item" id="verify-district-strategy-index">
+                  <a href="strategy-index.php" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>ยุทธศาสตร์ (S)</p>
+                  </a>
+                </li>
+                <li class="nav-item" id="verify-district-sepa-index">
+                  <a href="sepa-index.php" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>SEPA (E)</p>
+                  </a>
+                </li>
+                <li class="nav-item" id="verify-district-sepa-focus-group-index">
+                  <a href="sepa-focus-group-index.php" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>SEPA Focus Group (E)</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          <?php endif; ?>
 
-          <li class="nav-header">ค้นหาสถิติไฟฟ้าดับ</li>
+          <li class="nav-header">ค้นหาสถิติไฟฟ้าดับต่างๆ</li>
           <!-- ค้นหาสถิติไฟฟ้าดับ -->
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
@@ -302,6 +207,34 @@
               </li>
             </ul>
           </li>
+          <!-- ตรวจสอบดัชนีฯ -->
+          <?php if (isset($_SESSION['user_login']) OR isset($_SESSION['admin_login'])) : ?>
+            <li class="nav-header">ตรวจสอบสถิติไฟฟ้าดับต่างๆ</li>
+            <!-- ตรวจสอบเหตุการณ์ไฟฟ้าดับ -->
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-chart-bar"></i>
+                <p>
+                  ตรวจสอบสถิติไฟฟ้าดับ
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item" id="verify-stat-f">
+                  <a href="verify-strategy-index.php" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>สายป้อน</p>
+                  </a>
+                </li>
+                <li class="nav-item" id="verify-stat-ts">
+                  <a href="verify-sepa-index.php" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>สายส่ง และสถานีฯ</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          <?php endif; ?>
 
           <li class="nav-header">เอกสารที่เกี่ยวข้อง</li>
           <!-- เอกสารการคำนวณดัชนีฯ -->
@@ -347,7 +280,6 @@
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
-      
     </div>
     <!-- /.sidebar -->
   </aside>
