@@ -133,7 +133,9 @@
 			success : function(response){			
 				if($.trim(response) === "1"){
 					// console.log('login success');
-					location.href = "index.php";
+          sessionStorage.hideOfficalMenu = '1';
+          sessionStorage.hideUnofficalMenu = '0';
+          location.href = "verify-strategy-index.php";
 				} else {
           // console.error('login fail');
           console.log(response);

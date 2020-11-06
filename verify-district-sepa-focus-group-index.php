@@ -82,8 +82,6 @@
                       </div>
                       <select class="form-control select2">
                         <option selected>2563</option>
-                        <option>2562</option>
-                        <option>2561</option>
                       </select>
                     </div>
                   </div>
@@ -474,7 +472,7 @@
 <script src="dist/js/adminlte.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/hilight_menu.js"></script>
-<script src="dist/js/district-sepa-focus-group-index.js"></script>
+<script src="dist/js/verify-district-sepa-focus-group-index.js"></script>
 <!-- add-scirpt -->
 <?php 
   if (isset($_SESSION['user_login']) OR isset($_SESSION['admin_login'])) {

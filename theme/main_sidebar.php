@@ -28,7 +28,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="info">
-          <a href="#" class="d-block" id='unoffcial_indices'><strong>ความเชื่อถือได้ (ไม่เป็นทางการ)</strong></a>
+          <a href="#" class="d-block text-primary" id='unoffcial_indices'><strong>ความเชื่อถือได้ (ไม่เป็นทางการ)</strong></a>
         </div>
       </div>
 
@@ -40,13 +40,13 @@
 
           <!-- ตรวจสอบดัชนีฯ -->
           
-            <li class="nav-header"><strong>ตรวจสอบดัชนีฯ</strong></li>
+            <li class="nav-header  text-primary">ตรวจสอบดัชนีฯ</li>
             <!-- ดัชนีความเชื่อถือได้ -->
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-chart-bar"></i>
                 <p>
-                  <strong>ดัชนีฯ</strong>
+                  ดัชนีฯ
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
@@ -54,19 +54,19 @@
                 <li class="nav-item" id="verify-strategy-index">
                   <a href="verify-strategy-index.php" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p><strong>ยุทธศาสตร์ (S)</strong></p>
+                    <p>ยุทธศาสตร์ (S)</p>
                   </a>
                 </li>
                 <li class="nav-item" id="verify-sepa-index">
                   <a href="verify-sepa-index.php" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p><strong>SEPA (E)</strong></p>
+                    <p>SEPA (E)</p>
                   </a>
                 </li>
                 <li class="nav-item" id="verify-sepa-focus-group-index">
                   <a href="verify-sepa-focus-group-index.php" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p><strong>SEPA Focus Group (E)</strong></p>
+                    <p>SEPA Focus Group (E)</p>
                   </a>
                 </li>
               </ul>
@@ -76,27 +76,27 @@
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-chart-bar"></i>
                 <p>
-                  <strong>ดัชนีฯ ราย ฟข.</strong>
+                  ดัชนีฯ ราย ฟข.
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item" id="verify-district-strategy-index">
-                  <a href="strategy-index.php" class="nav-link">
+                  <a href="verify-district-strategy-index.php" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p><strong>ยุทธศาสตร์ (S)</strong></p>
+                    <p>ยุทธศาสตร์ (S)</p>
                   </a>
                 </li>
                 <li class="nav-item" id="verify-district-sepa-index">
-                  <a href="sepa-index.php" class="nav-link">
+                  <a href="verify-district-sepa-index.php" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p><strong>SEPA (E)</strong></p>
+                    <p>SEPA (E)</p>
                   </a>
                 </li>
                 <li class="nav-item" id="verify-district-sepa-focus-group-index">
-                  <a href="sepa-focus-group-index.php" class="nav-link">
+                  <a href="verify-district-sepa-focus-group-index.php" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p><strong>SEPA Focus Group (E)</strong></p>
+                    <p>SEPA Focus Group (E)</p>
                   </a>
                 </li>
               </ul>
@@ -105,27 +105,27 @@
 
           <!-- ตรวจสอบดัชนีฯ -->
           <?php if (isset($_SESSION['user_login']) OR isset($_SESSION['admin_login'])) : ?>
-            <li class="nav-header"><strong>ตรวจสอบเหตุการณ์คำนวณดัชนีฯ</strong></li>
+            <li class="nav-header  text-primary">ตรวจสอบเหตุการณ์คำนวณดัชนีฯ</li>
             <!-- ตรวจสอบเหตุการณ์ไฟฟ้าดับ -->
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-chart-bar"></i>
                 <p>
-                  <strong>เหตุการณ์ไฟฟ้าดับ</strong>
+                  เหตุการณ์ไฟฟ้าดับ
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
-                <li class="nav-item" id="verify-stat-f">
-                  <a href="verify-strategy-index.php" class="nav-link">
+                <li class="nav-item" id="verify-search-feeder-indices-index">
+                  <a href="verify-search-feeder-indices-index.php" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p><strong>สายป้อน</strong></p>
+                    <p>สายป้อน</p>
                   </a>
                 </li>
                 <!-- <li class="nav-item" id="verify-stat-ts">
                   <a href="verify-sepa-index.php" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p><strong>สายส่ง และสถานีฯ</strong></p>
+                    <p>สายส่ง และสถานีฯ</p>
                   </a>
                 </li> -->
               </ul>
@@ -169,9 +169,11 @@
       <!-- /.sidebar-menu -->
       <!-- /.unofficial -->
 
+      <!-- Line -->
       <?php if (isset($_SESSION['user_login']) OR isset($_SESSION['admin_login'])) : ?>
       <hr class="mt-0">
       <?php endif; ?>
+      <!-- /.Line -->
 
       <?php if (isset($_SESSION['user_login']) OR isset($_SESSION['admin_login'])) : ?>
       <!-- Sidebar user panel (optional) -->

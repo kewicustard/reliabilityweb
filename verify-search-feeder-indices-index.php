@@ -78,8 +78,8 @@
               <div class="card-header p-2">
                 <ul class="nav nav-pills">
                   <li class="nav-item"><a class="nav-link active" href="#feeder" data-toggle="tab">ค้นหารายสายป้อน</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#district" data-toggle="tab">ค้นหาราย ฟข.</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#cause" data-toggle="tab">ค้นหารายสาเหตุ</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#district-cause" data-toggle="tab">ค้นหาราย ฟข. และสาเหตุ</a></li>
+                  <!-- <li class="nav-item"><a class="nav-link" href="#cause" data-toggle="tab">ค้นหารายสาเหตุ</a></li> -->
                   <button type="button" class="btn btn-tool ml-auto" data-card-widget="collapse">
                     <i class="fas fa-minus"></i>
                   </button>
@@ -102,7 +102,7 @@
                   </div>
                   <!-- /.tab-pane -->
                   
-                  <div class="tab-pane" id="district">
+                  <div class="tab-pane" id="district-cause">
                     <!-- Search with District -->
                     <form class="form-horizontal">
                       <div class="form-group row">
@@ -135,16 +135,13 @@
                       </div>
                     </form>
                     <!-- /.Search with District -->
-                  </div>
-                  <!-- /.tab-pane -->
 
-                  <div class="tab-pane" id="cause">
                     <!-- Search with Cause -->
                     <form class="form-horizontal">
                       <div class="form-group row">
                         <label class="col-sm-3 col-form-label">สาเหตุ</label>
                         <div class="col-sm-9">
-                          <select class="form-control select2" name="selectedCauses[]" multiple="multiple" data-placeholder="เลือกอย่างน้อย 1 สาเหตุ" style="width: 100%;">
+                          <select class="form-control select2" name="selectedCauses[]" multiple="multiple" data-placeholder="เลือกสาเหตุ" style="width: 100%;">
                             <!-- fetch cause from api -->
                           </select>
                         </div>
@@ -152,7 +149,7 @@
                     </form>
                     <!-- /.Search with Cause -->
                   </div>
-                  <!-- /.tab-pane -->
+                  <!-- /.tab-pane district-cause -->
 
                   <form class="form-horizontal">
                     <div class="form-group row">
@@ -332,7 +329,7 @@
 <script src="dist/js/adminlte.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/hilight_menu.js"></script>
-<script src="dist/js/search-feeder-index.js"></script>
+<script src="dist/js/verify-search-feeder-indices-index.js"></script>
 <!-- add-scirpt -->
 <?php 
   if (isset($_SESSION['user_login']) OR isset($_SESSION['admin_login'])) {

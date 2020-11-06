@@ -339,11 +339,15 @@
     {
         // lasted_month
         $sql = 'SELECT  
-                    max(month(date)) AS lasted_month
+                    month(date) AS lasted_month, 
+                    day(date) AS lasted_day 
                 FROM
-                    indices_db
+                    indices_db_15days 
                 WHERE
-                    year(date) = '.$selectedYear;
+                    year(date) = '.$selectedYear.' 
+                ORDER BY 
+                    date DESC 
+                LIMIT 1';
 
         try {
             $stmt = $db->prepare($sql);
@@ -354,12 +358,26 @@
 
         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $lastedMonth = $row[0]["lasted_month"];
+        $lastedDay = $row[0]["lasted_day"];
+        
+        $previousMonth = (string)((int)$lastedMonth - 1);
     }
     // /.check lasted year and lasted month of indices_db table
 
     // ***** CALCULATE INDICES *****
+    // Check as half month or full month unoffcial data
+    {
+        if ((int)$lastedDay < 28) {
+            $halfMonth = true;
+        } else {
+            $halfMonth = false;
+        }
+    }
+    // /.Check as half month or full month unoffcial data
+
     // MEA Customer
     {
+        $queryMonth = ($halfMonth) ? $previousMonth : $lastedMonth ;
         $sql = 'SELECT 
                     month AS no_month, 
                     nocus AS mea_cust_month
@@ -368,7 +386,7 @@
                 WHERE 
                     district = 99 
                     AND year = '.$selectedYear.' 
-                    AND month <= '.$lastedMonth;
+                    AND month <= '.$queryMonth;
         
         try {
             $stmt = $db->prepare($sql);
@@ -385,11 +403,17 @@
             $accuMeaCust[$row['no_month']] = (float)$row['mea_cust_month'] + ($row['no_month'] == "1" ? 0 : (float)$accuMeaCust[(int)$row['no_month']-1]);
             $eachMeaCust[$row['no_month']] = (float)$row['mea_cust_month'];
         }
+        
+        if ($halfMonth) {
+            $accuMeaCust[] = $accuMeaCust[count($accuMeaCust)] + $eachMeaCust[count($eachMeaCust)];
+            $eachMeaCust[] = $eachMeaCust[count($eachMeaCust)];
+        }
     }
     // /.MEA Customer
 
     // MEA Strategy
     {
+        // query official data
         $sql = 'SELECT 
                     month(date) AS no_month,
                     sum(cust_num) AS cust_num_month, 
@@ -401,6 +425,7 @@
                     AND event in("I", "O") 
                     AND major IS NULL 
                     AND year(date) = '.$selectedYear.' 
+                    AND month(date) <= '.$previousMonth.' 
                 GROUP BY
                     month(date)';
         
@@ -412,6 +437,33 @@
         }
         
         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // query unoffcial data
+        $sql = 'SELECT 
+                    month(date) AS no_month,
+                    sum(cust_num) AS cust_num_month, 
+                    sum(cust_min) AS cust_min_month 
+                FROM 
+                    indices_db_15days 
+                WHERE 
+                    timeocb > 1 
+                    AND event in("I", "O") 
+                    AND major IS NULL 
+                    AND year(date) = '.$selectedYear.' 
+                    AND month(date) = '.$lastedMonth.' 
+                GROUP BY
+                    month(date)';
+        
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo 'Something wrong!!! '.$e->getMessage();
+        }
+        
+        $rowUnofficial = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $row = array_merge($row, $rowUnofficial);
         [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row, (int)$lastedMonth);
         [$saifiM, $saidiM] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
         [$saifiMonthM, $saidiMonthM] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
@@ -433,6 +485,7 @@
 
     // Transmission Line and Station Strategy
     {
+        // query official data
         $sql = 'SELECT 
                     month(date) AS no_month,
                     sum(cust_num) AS cust_num_month, 
@@ -444,6 +497,7 @@
                     AND event in("I", "O") 
                     AND major IS NULL 
                     AND year(date) = '.$selectedYear.' 
+                    AND month(date) <= '.$previousMonth.' 
                     AND group_type in("L", "S") 
                 GROUP BY
                     month(date)';
@@ -456,6 +510,34 @@
         }
         
         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // query unofficial data
+        $sql = 'SELECT 
+                    month(date) AS no_month,
+                    sum(cust_num) AS cust_num_month, 
+                    sum(cust_min) AS cust_min_month 
+                FROM 
+                    indices_db_15days 
+                WHERE 
+                    timeocb > 1 
+                    AND event in("I", "O") 
+                    AND major IS NULL 
+                    AND year(date) = '.$selectedYear.' 
+                    AND month(date) = '.$lastedMonth.' 
+                    AND group_type in("L", "S") 
+                GROUP BY
+                    month(date)';
+        
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo 'Something wrong!!! '.$e->getMessage();
+        }
+        
+        $rowUnofficial = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $row = array_merge($row, $rowUnofficial);
         [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row, (int)$lastedMonth);
         [$saifiLS, $saidiLS] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
         [$saifiMonthLS, $saidiMonthLS] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
@@ -477,6 +559,7 @@
 
     // Feeder Strategy
     {
+        // query offcial data
         $sql = 'SELECT 
                     month(date) AS no_month,
                     sum(cust_num) AS cust_num_month, 
@@ -488,6 +571,7 @@
                     AND event in("I", "O") 
                     AND major IS NULL 
                     AND year(date) = '.$selectedYear.' 
+                    AND month(date) <= '.$previousMonth.' 
                     AND group_type in("F") 
                 GROUP BY
                     month(date)';
@@ -500,6 +584,34 @@
         }
         
         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // query unoffcial data
+        $sql = 'SELECT 
+                    month(date) AS no_month,
+                    sum(cust_num) AS cust_num_month, 
+                    sum(cust_min) AS cust_min_month 
+                FROM 
+                    indices_db_15days 
+                WHERE 
+                    timeocb > 1 
+                    AND event in("I", "O") 
+                    AND major IS NULL 
+                    AND year(date) = '.$selectedYear.' 
+                    AND month(date) = '.$lastedMonth.' 
+                    AND group_type in("F") 
+                GROUP BY
+                    month(date)';
+        
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo 'Something wrong!!! '.$e->getMessage();
+        }
+        
+        $rowUnofficial = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $row = array_merge($row, $rowUnofficial);
         [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row, (int)$lastedMonth);
         [$saifiF, $saidiF] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
         [$saifiMonthF, $saidiMonthF] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
@@ -521,6 +633,7 @@
 
     // EGAT & PEA Strategy
     {
+        // query offcial data
         $sql = 'SELECT 
                     month(date) AS no_month,
                     sum(cust_num) AS cust_num_month, 
@@ -532,6 +645,7 @@
                     AND event in("I", "O") 
                     AND major IS NULL 
                     AND year(date) = '.$selectedYear.' 
+                    AND month(date) <= '.$previousMonth.' 
                     AND group_type in("E") 
                 GROUP BY
                     month(date)';
@@ -544,6 +658,34 @@
         }
         
         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // query unoffcial data
+        $sql = 'SELECT 
+                    month(date) AS no_month,
+                    sum(cust_num) AS cust_num_month, 
+                    sum(cust_min) AS cust_min_month 
+                FROM 
+                    indices_db_15days 
+                WHERE 
+                    timeocb > 1 
+                    AND event in("I", "O") 
+                    AND major IS NULL 
+                    AND year(date) = '.$selectedYear.' 
+                    AND month(date) = '.$lastedMonth.' 
+                    AND group_type in("E") 
+                GROUP BY
+                    month(date)';
+        
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo 'Something wrong!!! '.$e->getMessage();
+        }
+        
+        $rowUnofficial = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $row = array_merge($row, $rowUnofficial);
         [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row, (int)$lastedMonth);
         [$saifiE, $saidiE] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
         [$saifiMonthE, $saidiMonthE] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
@@ -568,6 +710,7 @@
         $res['lasted_year'] = $selectedYear;
         $res['lasted_month'] = $lastedMonth;
         $res['strategyHasTarget'] = strategyTarget[$selectedYear];
+        $res['halfMonth'] = $halfMonth;
     }
 
     // Create and Send Json Response

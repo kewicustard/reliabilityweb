@@ -8,11 +8,9 @@
 
     // ***** constant variable *****
     {
-        define('strategyTarget', [
-            2016 => true,
-            2017 => true,
+        define('sepaFocusHasTarget', [
             2018 => true,
-            2019 => false,
+            2019 => true,
             2020 => true
         ]); // true has target, false hasn't target
     }
@@ -36,20 +34,16 @@
         $saifiMTarget = array();
         $saifiLSTarget = array();
         $saifiFTarget = array();
-        $saifiETarget = array();
         $saidiMTarget = array();
         $saidiLSTarget = array();
         $saidiFTarget = array();
-        $saidiETarget = array();
 
         $saifiMKpi = array();
         $saifiLSKpi = array();
         $saifiFKpi = array();
-        $saifiEKpi = array();
         $saidiMKpi = array();
         $saidiLSKpi = array();
         $saidiFKpi = array();
-        $saidiEKpi = array();
 
         $saifiMPrevious = array();
         $saidiMPrevious = array();
@@ -63,10 +57,6 @@
         $saidiFPrevious = array();
         $saifiMonthFPrevious = array();
         $saidiMonthFPrevious = array();
-        $saifiEPrevious = array();
-        $saidiEPrevious = array();
-        $saifiMonthEPrevious = array();
-        $saidiMonthEPrevious = array();
 
         $saifiM = array();
         $saidiM = array();
@@ -80,22 +70,18 @@
         $saidiF = array();
         $saifiMonthF = array();
         $saidiMonthF = array();
-        $saifiE = array();
-        $saidiE = array();
-        $saifiMonthE = array();
-        $saidiMonthE = array();
     }
     // /.***** declare variable *****
     
-    // MEA Strategy Target or MEA Indices Previous Year
+    // MEA SEPA Focus Group Target or MEA Indices Previous Year
     {
-        // MEA Strategy Target
-        if (strategyTarget[$selectedYear]) { //strategyTarget[$selectedYear]
+        // MEA SEPA Focus Group Target
+        if (sepaFocusHasTarget[$selectedYear]) { //sepaFocusHasTarget[$selectedYear]
 
             $sql = 'SELECT
-                        * 
+                        *
                     FROM
-                        target
+                        target_mea_sepa_focus_group
                     WHERE
                         year(yearmonthnumbertarget) = '.$selectedYear;
 
@@ -145,11 +131,6 @@
                 $saidiFTarget[3][date("n", strtotime($row['YearMonthnumberTarget']))] = (float)$row['SAIDI_DistTarget_3'];
                 $saidiFTarget[4][date("n", strtotime($row['YearMonthnumberTarget']))] = (float)$row['SAIDI_DistTarget_4'];
                 $saidiFTarget[5][date("n", strtotime($row['YearMonthnumberTarget']))] = (float)$row['SAIDI_DistTarget_5'];
-
-                // saifi EGAT Target
-                $saifiETarget[date("n", strtotime($row['YearMonthnumberTarget']))] = (float)$row['SAIFI_EGATTarget'];
-                // saidi EGAT Target
-                $saidiETarget[date("n", strtotime($row['YearMonthnumberTarget']))] = (float)$row['SAIDI_EGATTarget'];
             }
             
             // Create Array Response
@@ -159,22 +140,28 @@
             $res['saidiLSTarget'] = $saidiLSTarget;
             $res['saifiFTarget'] = $saifiFTarget;
             $res['saidiFTarget'] = $saidiFTarget;
-            $res['saifiETarget'] = $saifiETarget;
-            $res['saidiETarget'] = $saidiETarget;
 
         } else { // MEA Indices Previous Year
             $previousYear = $selectedYear-1;
 
-            // MEA Customer Previous Year
+            // MEA Focus Group Customer Previous Year
             {
                 $sql = 'SELECT 
                             month AS no_month, 
-                            nocus AS mea_cust 
+                            sum(nocus) AS mea_cust 
                         FROM 
                             discust 
                         WHERE 
-                            district = 99 
-                            AND year = '.$previousYear;
+                            district in (
+                                SELECT 
+                                    code 
+                                FROM 
+                                    focusdist 
+                                WHERE 
+                                    year = '.$selectedYear.') 
+                            AND year = '.$previousYear.' 
+                        GROUP BY 
+                            month';
     
                 try {
                     $stmt = $db->prepare($sql);
@@ -189,7 +176,7 @@
                 }
             }
 
-            // MEA Strategy Previous Year
+            // MEA SEPA Focus Group Previous Year
             {
                 $sql = 'SELECT 
                             month(date) AS no_month, 
@@ -202,6 +189,14 @@
                             AND event in("I", "O") 
                             AND major is null 
                             AND year(date) = '.$previousYear.' 
+                            AND control = "C" 
+                            AND custdist in ( 
+                                SELECT 
+                                    code 
+                                FROM 
+                                    focusdist 
+                                WHERE 
+                                    year = '.$selectedYear.') 
                         GROUP BY 
                             month(date)';
     
@@ -224,7 +219,7 @@
                 $res['saidiMonthMPrevious'] = $saidiMonthMPrevious;
             }
 
-            // Transmission Line and Station Strategy Previous Year
+            // Transmission Line and Station SEPA Focus Group Previous Year
             {
                 $sql = 'SELECT 
                             month(date) AS no_month, 
@@ -238,6 +233,14 @@
                             AND major is null 
                             AND year(date) = '.$previousYear.' 
                             AND group_type in("L", "S") 
+                            AND control = "C" 
+                            AND custdist in ( 
+                                SELECT 
+                                    code 
+                                FROM 
+                                    focusdist 
+                                WHERE 
+                                    year = '.$selectedYear.') 
                         GROUP BY 
                             month(date)';
 
@@ -274,6 +277,14 @@
                             AND major is null 
                             AND year(date) = '.$previousYear.' 
                             AND group_type in("F") 
+                            AND control = "C" 
+                            AND custdist in ( 
+                                SELECT 
+                                    code 
+                                FROM 
+                                    focusdist 
+                                WHERE 
+                                    year = '.$selectedYear.') 
                         GROUP BY 
                             month(date)';
 
@@ -295,55 +306,23 @@
                 $res['saifiMonthFPrevious'] = $saifiMonthFPrevious;
                 $res['saidiMonthFPrevious'] = $saidiMonthFPrevious;
             }
-
-            // EGAT & PEA Previous Year
-            {
-                $sql = 'SELECT 
-                            month(date) AS no_month, 
-                            sum(cust_num) AS cust_num_month, 
-                            sum(cust_min) AS cust_min_month
-                        FROM 
-                            indices_db 
-                        WHERE 
-                            timeocb > 1 
-                            AND event in("I", "O") 
-                            AND major is null 
-                            AND year(date) = '.$previousYear.' 
-                            AND group_type in("E") 
-                        GROUP BY 
-                            month(date)';
-
-                try {
-                    $stmt = $db->prepare($sql);
-                    $stmt->execute();
-                } catch (PDOException $e) {
-                    echo 'Something wrong!!! '.$e->getMessage();
-                }
-
-                $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row);
-                [$saifiEPrevious, $saidiEPrevious] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
-                [$saifiMonthEPrevious, $saidiMonthEPrevious] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
-                
-                // Create Array Response
-                $res['saifiEPrevious'] = $saifiEPrevious;
-                $res['saidiEPrevious'] = $saidiEPrevious;
-                $res['saifiMonthEPrevious'] = $saifiMonthEPrevious;
-                $res['saidiMonthEPrevious'] = $saidiMonthEPrevious;
-            }
         }
     }
-    // /.MEA Strategy Target or MEA Indices Previous Year
+    // /.MEA SEPA Focus Group Target or MEA Indices Previous Year
 
     // check lasted month of indices_db table
     {
         // lasted_month
         $sql = 'SELECT  
-                    max(month(date)) AS lasted_month
+                    month(date) AS lasted_month, 
+                    day(date) AS lasted_day 
                 FROM
-                    indices_db
+                    indices_db_15days 
                 WHERE
-                    year(date) = '.$selectedYear;
+                    year(date) = '.$selectedYear.'
+                ORDER BY 
+                    date DESC 
+                LIMIT 1';
 
         try {
             $stmt = $db->prepare($sql);
@@ -354,21 +333,43 @@
 
         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $lastedMonth = $row[0]["lasted_month"];
+        $lastedDay = $row[0]["lasted_day"];
+        
+        $previousMonth = (string)((int)$lastedMonth - 1);
     }
     // /.check lasted year and lasted month of indices_db table
 
     // ***** CALCULATE INDICES *****
-    // MEA Customer
+    // Check as half month or full month unoffcial data
     {
+        if ((int)$lastedDay < 28) {
+            $halfMonth = true;
+        } else {
+            $halfMonth = false;
+        }
+    }
+    // /.Check as half month or full month unoffcial data
+
+    // MEA Focus Group Customer
+    {
+        $queryMonth = ($halfMonth) ? $previousMonth : $lastedMonth;
         $sql = 'SELECT 
                     month AS no_month, 
-                    nocus AS mea_cust_month
+                    sum(nocus) AS mea_cust_month
                 FROM 
                     discust 
                 WHERE 
-                    district = 99 
+                    district in (
+                        SELECT 
+                            code 
+                        FROM 
+                            focusdist 
+                        WHERE 
+                            year = '.$selectedYear.') 
                     AND year = '.$selectedYear.' 
-                    AND month <= '.$lastedMonth;
+                    AND month <= '.$queryMonth.' 
+                    GROUP BY 
+                        month';
         
         try {
             $stmt = $db->prepare($sql);
@@ -376,7 +377,7 @@
         } catch (PDOException $e) {
             echo 'Something wrong!!! '.$e->getMessage();
         }
-
+        
         // remove member in array
         $accuMeaCust = array();
         $eachMeaCust = array();
@@ -385,11 +386,17 @@
             $accuMeaCust[$row['no_month']] = (float)$row['mea_cust_month'] + ($row['no_month'] == "1" ? 0 : (float)$accuMeaCust[(int)$row['no_month']-1]);
             $eachMeaCust[$row['no_month']] = (float)$row['mea_cust_month'];
         }
-    }
-    // /.MEA Customer
 
-    // MEA Strategy
+        if ($halfMonth) {
+            $accuMeaCust[] = $accuMeaCust[count($accuMeaCust)] + $eachMeaCust[count($eachMeaCust)];
+            $eachMeaCust[] = $eachMeaCust[count($eachMeaCust)];
+        }
+    }
+    // /.MEA Focus Group Customer
+
+    // MEA SEPA Focus Group
     {
+        // query official data
         $sql = 'SELECT 
                     month(date) AS no_month,
                     sum(cust_num) AS cust_num_month, 
@@ -401,6 +408,15 @@
                     AND event in("I", "O") 
                     AND major IS NULL 
                     AND year(date) = '.$selectedYear.' 
+                    AND month(date) <= '.$previousMonth.' 
+                    AND control = "C" 
+                    AND custdist in ( 
+                        SELECT 
+                            code 
+                        FROM 
+                            focusdist 
+                        WHERE 
+                            year = '.$selectedYear.') 
                 GROUP BY
                     month(date)';
         
@@ -412,10 +428,45 @@
         }
         
         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // query official data
+        $sql = 'SELECT 
+                    month(date) AS no_month,
+                    sum(cust_num) AS cust_num_month, 
+                    sum(cust_min) AS cust_min_month 
+                FROM 
+                    indices_db_15days 
+                WHERE 
+                    timeocb > 1 
+                    AND event in("I", "O") 
+                    AND major IS NULL 
+                    AND year(date) = '.$selectedYear.' 
+                    AND month(date) = '.$lastedMonth.' 
+                    AND control = "C" 
+                    AND custdist in ( 
+                        SELECT 
+                            code 
+                        FROM 
+                            focusdist 
+                        WHERE 
+                            year = '.$selectedYear.') 
+                GROUP BY
+                    month(date)';
+        
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo 'Something wrong!!! '.$e->getMessage();
+        }
+
+        $rowUnofficial = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $row = array_merge($row, $rowUnofficial);
         [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row, (int)$lastedMonth);
         [$saifiM, $saidiM] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
         [$saifiMonthM, $saidiMonthM] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
-        if (strategyTarget[$selectedYear]) {
+        if (sepaFocusHasTarget[$selectedYear]) {
             [$saifiMKpi, $saidiMKpi] = calculateKPI($saifiM, $saidiM, $saifiMTarget, $saidiMTarget, "m");
         } else {
             [$saifiMKpi, $saidiMKpi] = calculateComparePreviousYear($saifiM, $saidiM, $saifiMPrevious, $saidiMPrevious);
@@ -429,10 +480,11 @@
         $res['saifiMKpi'] = $saifiMKpi;
         $res['saidiMKpi'] = $saidiMKpi;
     }
-    // /.MEA Strategy
+    // /.MEA SEPA Focus Group
 
-    // Transmission Line and Station Strategy
+    // Transmission Line and Station SEPA Focus Group
     {
+        // query official data
         $sql = 'SELECT 
                     month(date) AS no_month,
                     sum(cust_num) AS cust_num_month, 
@@ -444,7 +496,16 @@
                     AND event in("I", "O") 
                     AND major IS NULL 
                     AND year(date) = '.$selectedYear.' 
+                    AND month(date) <= '.$previousMonth.' 
                     AND group_type in("L", "S") 
+                    AND control = "C"
+                    AND custdist in ( 
+                        SELECT 
+                            code 
+                        FROM 
+                            focusdist 
+                        WHERE 
+                            year = '.$selectedYear.')  
                 GROUP BY
                     month(date)';
         
@@ -456,10 +517,46 @@
         }
         
         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // query unofficial data
+        $sql = 'SELECT 
+                    month(date) AS no_month,
+                    sum(cust_num) AS cust_num_month, 
+                    sum(cust_min) AS cust_min_month 
+                FROM 
+                    indices_db_15days 
+                WHERE 
+                    timeocb > 1 
+                    AND event in("I", "O") 
+                    AND major IS NULL 
+                    AND year(date) = '.$selectedYear.' 
+                    AND month(date) = '.$lastedMonth.' 
+                    AND group_type in("L", "S") 
+                    AND control = "C"
+                    AND custdist in ( 
+                        SELECT 
+                            code 
+                        FROM 
+                            focusdist 
+                        WHERE 
+                            year = '.$selectedYear.')  
+                GROUP BY
+                    month(date)';
+        
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo 'Something wrong!!! '.$e->getMessage();
+        }
+
+        $rowUnofficial = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $row = array_merge($row, $rowUnofficial);
         [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row, (int)$lastedMonth);
         [$saifiLS, $saidiLS] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
         [$saifiMonthLS, $saidiMonthLS] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
-        if (strategyTarget[$selectedYear]) {
+        if (sepaFocusHasTarget[$selectedYear]) {
             [$saifiLSKpi, $saidiLSKpi] = calculateKPI($saifiLS, $saidiLS, $saifiLSTarget, $saidiLSTarget, "ls");
         } else {
             [$saifiLSKpi, $saidiLSKpi] = calculateComparePreviousYear($saifiLS, $saidiLS, $saifiLSPrevious, $saidiLSPrevious);
@@ -473,10 +570,11 @@
         $res['saifiLSKpi'] = $saifiLSKpi;
         $res['saidiLSKpi'] = $saidiLSKpi;
     }
-    // /.Transmission Line and Station Strategy
+    // /.Transmission Line and Station SEPA Focus Group
 
-    // Feeder Strategy
+    // Feeder SEPA Focus Group
     {
+        // query official data
         $sql = 'SELECT 
                     month(date) AS no_month,
                     sum(cust_num) AS cust_num_month, 
@@ -488,7 +586,16 @@
                     AND event in("I", "O") 
                     AND major IS NULL 
                     AND year(date) = '.$selectedYear.' 
+                    AND month(date) <= '.$previousMonth.' 
                     AND group_type in("F") 
+                    AND control = "C" 
+                    AND custdist in ( 
+                        SELECT 
+                            code 
+                        FROM 
+                            focusdist 
+                        WHERE 
+                            year = '.$selectedYear.') 
                 GROUP BY
                     month(date)';
         
@@ -500,10 +607,46 @@
         }
         
         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // query official data
+        $sql = 'SELECT 
+                    month(date) AS no_month,
+                    sum(cust_num) AS cust_num_month, 
+                    sum(cust_min) AS cust_min_month 
+                FROM 
+                    indices_db_15days 
+                WHERE 
+                    timeocb > 1 
+                    AND event in("I", "O") 
+                    AND major IS NULL 
+                    AND year(date) = '.$selectedYear.' 
+                    AND month(date) = '.$lastedMonth.' 
+                    AND group_type in("F") 
+                    AND control = "C" 
+                    AND custdist in ( 
+                        SELECT 
+                            code 
+                        FROM 
+                            focusdist 
+                        WHERE 
+                            year = '.$selectedYear.') 
+                GROUP BY
+                    month(date)';
+        
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo 'Something wrong!!! '.$e->getMessage();
+        }
+
+        $rowUnofficial = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $row = array_merge($row, $rowUnofficial);
         [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row, (int)$lastedMonth);
         [$saifiF, $saidiF] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
         [$saifiMonthF, $saidiMonthF] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
-        if (strategyTarget[$selectedYear]) {
+        if (sepaFocusHasTarget[$selectedYear]) {
             [$saifiFKpi, $saidiFKpi] = calculateKPI($saifiF, $saidiF, $saifiFTarget, $saidiFTarget, "f");
         } else {
             [$saifiFKpi, $saidiFKpi] = calculateComparePreviousYear($saifiF, $saidiF, $saifiFPrevious, $saidiFPrevious);
@@ -517,57 +660,14 @@
         $res['saifiFKpi'] = $saifiFKpi;
         $res['saidiFKpi'] = $saidiFKpi;
     }
-    // /.Feeder Strategy
-
-    // EGAT & PEA Strategy
-    {
-        $sql = 'SELECT 
-                    month(date) AS no_month,
-                    sum(cust_num) AS cust_num_month, 
-                    sum(cust_min) AS cust_min_month 
-                FROM 
-                    indices_db 
-                WHERE 
-                    timeocb > 1 
-                    AND event in("I", "O") 
-                    AND major IS NULL 
-                    AND year(date) = '.$selectedYear.' 
-                    AND group_type in("E") 
-                GROUP BY
-                    month(date)';
-        
-        try {
-            $stmt = $db->prepare($sql);
-            $stmt->execute();
-        } catch (PDOException $e) {
-            echo 'Something wrong!!! '.$e->getMessage();
-        }
-        
-        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        [$accuCustNum, $eachCustNum, $accuCustMin, $eachCustMin] = fetchCustNumMin($row, (int)$lastedMonth);
-        [$saifiE, $saidiE] = calculateAccuIndices($accuCustNum, $accuCustMin, $accuMeaCust);
-        [$saifiMonthE, $saidiMonthE] = calculateEachMonthIndices($eachCustNum, $eachCustMin, $eachMeaCust);
-        if (strategyTarget[$selectedYear]) {
-            [$saifiEKpi, $saidiEKpi] = calculateKPI($saifiE, $saidiE, $saifiETarget, $saidiETarget, "e");
-        } else {
-            [$saifiEKpi, $saidiEKpi] = calculateComparePreviousYear($saifiE, $saidiE, $saifiEPrevious, $saidiEPrevious);
-        }
-
-        // Create Array Response
-        $res['saifiE'] = $saifiE;
-        $res['saidiE'] = $saidiE;
-        $res['saifiMonthE'] = $saifiMonthE;
-        $res['saidiMonthE'] = $saidiMonthE;
-        $res['saifiEKpi'] = $saifiEKpi;
-        $res['saidiEKpi'] = $saidiEKpi;
-    }
-    // /.EGAT & PEA Strategy
+    // /.Feeder SEPA Focus Group
 
     // Create Array Response
     {
         $res['lasted_year'] = $selectedYear;
         $res['lasted_month'] = $lastedMonth;
-        $res['strategyHasTarget'] = strategyTarget[$selectedYear];
+        $res['sepaFocusHasTarget'] = sepaFocusHasTarget[$selectedYear];
+        $res['halfMonth'] = $halfMonth;
     }
 
     // Create and Send Json Response

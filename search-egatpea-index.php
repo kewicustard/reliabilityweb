@@ -284,5 +284,12 @@
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/hilight_menu.js"></script>
 <script src="dist/js/search-egatpea-index.js"></script>
+<!-- add-scirpt -->
+<?php 
+  if (isset($_SESSION['user_login']) OR isset($_SESSION['admin_login'])) {
+    include "theme/add-script.php";
+  }
+?>
+<!-- /.add-script -->
 </body>
 </html>

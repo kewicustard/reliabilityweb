@@ -7,7 +7,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ดัชนีฯ SEPA Focus Group (E) ราย ฟข.</title>
+  <title>ดัชนีฯ SEPA (E) ราย ฟข.</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -74,7 +74,7 @@
                 </div>
               </div>
               <div class="card-body">
-                <div class="row">
+                <div class="row" >
                   <div class="col-md-3">
                     <div class="input-group" style="width: 100%;">
                       <div class="input-group-prepend">
@@ -82,8 +82,6 @@
                       </div>
                       <select class="form-control select2">
                         <option selected>2563</option>
-                        <option>2562</option>
-                        <option>2561</option>
                       </select>
                     </div>
                   </div>
@@ -412,29 +410,6 @@
         </div>
         <!-- /.District Charts -->
       </div><!-- /.container-fluid -->
-
-      <!-- modal -->
-      <div class="modal fade" id="modal-default">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title"><i class="fas fa-exclamation-triangle" style="color: red;"></i> พบข้อผิดพลาด</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <p>ไม่มี ฟข. นี้ในปี พ.ศ. ที่เลือก<br>กรุณาเลือกปี หรือ ฟข. ใหม่อีกครั้ง</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-      </div>
-      <!-- /.modal -->
     </section>
     <!-- /.content -->
   </div>
@@ -474,7 +449,7 @@
 <script src="dist/js/adminlte.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/hilight_menu.js"></script>
-<script src="dist/js/district-sepa-focus-group-index.js"></script>
+<script src="dist/js/verify-district-sepa-index.js"></script>
 <!-- add-scirpt -->
 <?php 
   if (isset($_SESSION['user_login']) OR isset($_SESSION['admin_login'])) {
