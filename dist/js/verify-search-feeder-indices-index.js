@@ -233,7 +233,7 @@ $(function () {
         processing: true,
         serverSide: true,
         ajax: {
-          url: './api/search-feeder-index-api.php',
+          url: './api/verify-search-feeder-indices-index-api.php',
           type: "GET",
           data: function(d) {
             let {feederName, selectedDistValue, selectedCause, outageSystem, intType, dateFrom, dateTo} = getFormValue();
