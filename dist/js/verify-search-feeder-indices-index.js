@@ -250,7 +250,7 @@ $(function () {
           targets: -1,
           data: null,
           render: function(data, type, row, meta) {
-            return '<button onclick="editEvent(\''+row[1]+'\')" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i> Edit</button>'
+            return '<button onclick="editEvent(\''+data+'\')" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i> แก้ไข</button>'
           }
         } ],
         drawCallback: function( settings ) {
@@ -289,8 +289,15 @@ $(function () {
     }
 
     // Global function
-    editEvent = (temp) => {
-      console.log(temp);
+    editEvent = (rowData) => {
+      let modalElem = $("#modal-default");
+      let rowArr = rowData.split(','); // split string on comma
+      console.log(rowData);
+      console.log(rowArr);
+      modalElem.find('.modal-title').html(`แก้ไขเหตุการณ์<br>วันที่ ${rowArr[0]} สายป้อน ${rowArr[1]} เวลา ${rowArr[2]}`);
+      modalElem.find('textarea').val('');
+      modalElem.modal({backdrop: "static"});
+
     };
     // /.Global function
 

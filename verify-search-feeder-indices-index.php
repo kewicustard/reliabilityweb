@@ -256,7 +256,7 @@
                       <th>เบอร์เสา</th>
                       <th>ถนน</th>
                       <th>รายละเอียดที่เกี่ยวข้อง</th>
-                      <th>แก้ไข</th>
+                      <th>แก้ไขเหตุการณ์</th>
                     </tr>
                   </thead>
                 </table>
@@ -280,18 +280,30 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Default Modal</h4>
+              <h5 class="modal-title">Default Modal</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
-              <p>One fine body&hellip;</p>
-            </div>
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+            <form role="form">
+              <div class="modal-body">            
+                <div class="form-group">
+                  <label>กรอกรายละเอียด</label>
+                  <textarea class="form-control" rows="3" placeholder="กรอกรายละเอียดเหตุการณ์ที่ต้องการแก้ไข..." style="margin-top: 0px; margin-bottom: 0px; height: 144px;"></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="customFile">ไฟล์แนบ</label>
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile">
+                    <label class="custom-file-label" for="customFile">เลือกไฟล์แนบ</label>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </form>
           </div>
           <!-- /.modal-content -->
         </div>
