@@ -246,6 +246,13 @@ $(function () {
             d.dateTo = dateTo;
           }
         },
+        columnDefs: [ {
+          targets: -1,
+          data: null,
+          render: function(data, type, row, meta) {
+            return '<button onclick="editEvent(\''+row[1]+'\')" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i> Edit</button>'
+          }
+        } ],
         drawCallback: function( settings ) {
           let api = this.api();
           updateCaption({numRows: api.rows().count()});
@@ -280,6 +287,12 @@ $(function () {
         },
       });
     }
+
+    // Global function
+    editEvent = (temp) => {
+      console.log(temp);
+    };
+    // /.Global function
 
     function updateCaption({numRows}) {
       let selectedForm = activeFormElems.filter(activeFormElem => activeFormElem.attr('class').includes('active'))

@@ -59,14 +59,14 @@
         array(  'db' => 'pole', 'dt' => 9),
         array(  'db' => 'road', 'dt' => 10),
         array(  'db' => 'lateral', 'dt' => 11),
-        array(
-            'db'        => 'fdr_outage_id',
-            'dt'        => 12,
-            'formatter' => function( $d, $row ) {
-                return '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default" data-backdrop="static">Launch Default Modal</button>';
+        // array(
+        //     'db'        => 'fdr_outage_id',
+        //     'dt'        => 12,
+        //     'formatter' => function( $d, $row ) {
+        //         return '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default" data-backdrop="static">Launch Default Modal</button>';
                 
-            }
-        )
+        //     }
+        // )
     
     );
     //เชื่อต่อฐานข้อมูล
