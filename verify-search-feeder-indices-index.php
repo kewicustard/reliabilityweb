@@ -28,6 +28,9 @@
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <!-- Filepond for upload file -->
+  <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/filepond/dist/filepond.min.css" rel="stylesheet">
   <style>
     .custom-file-input:lang(th) ~ .custom-file-label::after {
       content: "เลือกไฟล์";
@@ -296,27 +299,33 @@
                   <label>กรอกรายละเอียด</label>
                   <textarea class="form-control" rows="3" placeholder="กรอกรายละเอียดเหตุการณ์ที่ต้องการแก้ไข..." style="margin-top: 0px; margin-bottom: 0px; height: 144px;"></textarea>
                 </div>
-                <div class="form-group">
-                  <!-- <label for="customFile1">ไฟล์แนบ 1</label> -->
+                <!-- <div class="form-group">
+                  <label for="customFile1">ไฟล์แนบ 1</label>
                   <div class="custom-file">
                     <input type="file" class="custom-file-input" id="customFile1" lang="th">
                     <label class="custom-file-label" for="customFile1">ไฟล์แนบ 1</label>
                   </div>
                 </div>
                 <div class="form-group">
-                  <!-- <label for="customFile2">ไฟล์แนบ 2</label> -->
+                  <label for="customFile2">ไฟล์แนบ 2</label>
                   <div class="custom-file">
                     <input type="file" class="custom-file-input" id="customFile2" lang="th">
                     <label class="custom-file-label" for="customFile2">ไฟล์แนบ 2</label>
                   </div>
                 </div>
                 <div class="form-group">
-                  <!-- <label for="customFile3">ไฟล์แนบ 3</label> -->
+                  <label for="customFile3">ไฟล์แนบ 3</label>
                   <div class="custom-file">
                     <input type="file" class="custom-file-input" id="customFile3" lang="th">
                     <label class="custom-file-label" for="customFile3">ไฟล์แนบ 3</label>
                   </div>
-                </div>
+                </div> -->
+                <input type="file" 
+                  class="filepond"
+                  name="filepond"
+                  multiple
+                  data-max-file-size="3MB"
+                  data-max-files="3" />
               </div>
               <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -384,7 +393,13 @@
 <script src="plugins/jquery-validation/additional-methods.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.js"></script>
-<!-- AdminLTE for demo purposes -->
+<!-- Filepond for upload file -->
+<script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.min.js"></script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.min.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.min.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+<!-- my-script -->
 <script src="dist/js/hilight_menu.js"></script>
 <script src="dist/js/verify-search-feeder-indices-index.js"></script>
 <!-- add-scirpt -->

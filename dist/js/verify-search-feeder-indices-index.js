@@ -306,26 +306,55 @@ $(function () {
       modalElem.find('.modal-title').html(`แก้ไขเหตุการณ์<br>วันที่ ${rowArr[0]} สายป้อน ${rowArr[1]} เวลา ${rowArr[2]}`);
       modalElem.find('textarea').val('');
       modalElem.modal({backdrop: "static"});
-
     };
     // /.Global function
 
+    /*
+    We want to preview images, so we need to register the Image Preview plugin
+    */
+    FilePond.registerPlugin(
+      
+      // encodes the file as base64 data
+      FilePondPluginFileEncode,
+      
+      // validates the size of the file
+      FilePondPluginFileValidateSize,
+      
+      // corrects mobile image orientation
+      FilePondPluginImageExifOrientation,
+      
+      // previews dropped images
+      FilePondPluginImagePreview
+    );
+
+    // Select the file input and use create() to turn it into a pond
+    FilePond.create(
+      document.querySelector('input[type="file"]'),
+      {
+        labelIdle: 'ลากแล้ววางไฟล์ที่ต้องการ หรือ <span class="filepond--label-action">คลิกเลือกไฟล์ </span>',
+      }
+    );
+
+    FilePond.setOptions({
+      server: './'
+    });
+
     // Handle file upload interface
-    uploadFileUIs.map((uploadFileUI, index) => {
-      uploadFileUI.on('change',function(){
-        //get the file name
-        let fileName = $(this).val();
-        let cleanFileName = fileName.replace('C:\\fakepath\\', "");
-        //replace the "Choose a file" label
-        if (cleanFileName === undefined || cleanFileName === "" || cleanFileName.length === 0) {
-          $(this).next('.custom-file-label').attr('data-content', defaultLabel[index]);
-          $(this).next('.custom-file-label').text(defaultLabel[index]);
-        } else {
-          $(this).next('.custom-file-label').attr('data-content', cleanFileName);
-          $(this).next('.custom-file-label').text(cleanFileName);
-        }
-      })
-    })
+    // uploadFileUIs.map((uploadFileUI, index) => {
+    //   uploadFileUI.on('change',function(){
+    //     //get the file name
+    //     let fileName = $(this).val();
+    //     let cleanFileName = fileName.replace('C:\\fakepath\\', "");
+    //     //replace the "Choose a file" label
+    //     if (cleanFileName === undefined || cleanFileName === "" || cleanFileName.length === 0) {
+    //       $(this).next('.custom-file-label').attr('data-content', defaultLabel[index]);
+    //       $(this).next('.custom-file-label').text(defaultLabel[index]);
+    //     } else {
+    //       $(this).next('.custom-file-label').attr('data-content', cleanFileName);
+    //       $(this).next('.custom-file-label').text(cleanFileName);
+    //     }
+    //   })
+    // })
     // /.Handle file upload interface
 
     function updateCaption({numRows}) {
