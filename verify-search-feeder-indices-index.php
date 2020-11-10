@@ -28,6 +28,11 @@
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <style>
+    .custom-file-input:lang(th) ~ .custom-file-label::after {
+      content: "เลือกไฟล์";
+    }
+  </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
 <div class="wrapper">
@@ -292,10 +297,24 @@
                   <textarea class="form-control" rows="3" placeholder="กรอกรายละเอียดเหตุการณ์ที่ต้องการแก้ไข..." style="margin-top: 0px; margin-bottom: 0px; height: 144px;"></textarea>
                 </div>
                 <div class="form-group">
-                  <label for="customFile">ไฟล์แนบ</label>
+                  <!-- <label for="customFile1">ไฟล์แนบ 1</label> -->
                   <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="customFile">
-                    <label class="custom-file-label" for="customFile">เลือกไฟล์แนบ</label>
+                    <input type="file" class="custom-file-input" id="customFile1" lang="th">
+                    <label class="custom-file-label" for="customFile1">ไฟล์แนบ 1</label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <!-- <label for="customFile2">ไฟล์แนบ 2</label> -->
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile2" lang="th">
+                    <label class="custom-file-label" for="customFile2">ไฟล์แนบ 2</label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <!-- <label for="customFile3">ไฟล์แนบ 3</label> -->
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile3" lang="th">
+                    <label class="custom-file-label" for="customFile3">ไฟล์แนบ 3</label>
                   </div>
                 </div>
               </div>

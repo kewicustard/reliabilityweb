@@ -124,6 +124,16 @@ $(function () {
       "พ.ย." : 11,
       "ธ.ค." : 12,
     };
+    const uploadFileUIs = [
+      $('#customFile1'),
+      $('#customFile2'),
+      $('#customFile3'),
+    ];
+    const defaultLabel = [
+      'ไฟล์แนบ 1', 
+      'ไฟล์แนบ 2', 
+      'ไฟล์แนบ 3'
+    ];
     // let table;
 
     $('[type="submit"]').click((e) => {
@@ -292,7 +302,6 @@ $(function () {
     editEvent = (rowData) => {
       let modalElem = $("#modal-default");
       let rowArr = rowData.split(','); // split string on comma
-      console.log(rowData);
       console.log(rowArr);
       modalElem.find('.modal-title').html(`แก้ไขเหตุการณ์<br>วันที่ ${rowArr[0]} สายป้อน ${rowArr[1]} เวลา ${rowArr[2]}`);
       modalElem.find('textarea').val('');
@@ -300,6 +309,24 @@ $(function () {
 
     };
     // /.Global function
+
+    // Handle file upload interface
+    uploadFileUIs.map((uploadFileUI, index) => {
+      uploadFileUI.on('change',function(){
+        //get the file name
+        let fileName = $(this).val();
+        let cleanFileName = fileName.replace('C:\\fakepath\\', "");
+        //replace the "Choose a file" label
+        if (cleanFileName === undefined || cleanFileName === "" || cleanFileName.length === 0) {
+          $(this).next('.custom-file-label').attr('data-content', defaultLabel[index]);
+          $(this).next('.custom-file-label').text(defaultLabel[index]);
+        } else {
+          $(this).next('.custom-file-label').attr('data-content', cleanFileName);
+          $(this).next('.custom-file-label').text(cleanFileName);
+        }
+      })
+    })
+    // /.Handle file upload interface
 
     function updateCaption({numRows}) {
       let selectedForm = activeFormElems.filter(activeFormElem => activeFormElem.attr('class').includes('active'))
