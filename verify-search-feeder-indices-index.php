@@ -285,49 +285,187 @@
 
       <!-- modal -->
       <div class="modal fade" id="modal-default">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Default Modal</h5>
+              <h5 class="modal-title">แก้ไขเหตุการณ์</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <form role="form">
-              <div class="modal-body">            
-                <div class="form-group">
-                  <label>กรอกรายละเอียด</label>
-                  <textarea class="form-control" rows="3" placeholder="กรอกรายละเอียดเหตุการณ์ที่ต้องการแก้ไข..." style="margin-top: 0px; margin-bottom: 0px; height: 144px;"></textarea>
-                </div>
-                <!-- <div class="form-group">
-                  <label for="customFile1">ไฟล์แนบ 1</label>
-                  <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="customFile1" lang="th">
-                    <label class="custom-file-label" for="customFile1">ไฟล์แนบ 1</label>
+              <div class="modal-body">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-lg-6">
+                    <table class="table table-sm">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th></th>
+                          <th>
+                            <div class="d-flex justify-content-between">
+                              <div>แก้ไขเป็น</div>
+                              <div><button type="button" class="btn btn-secondary btn-xs">ล้างข้อมูล</button></div>
+                            </div>
+                            <!-- <span>แก้ไขเป็น</span>
+                            <button type="button" class="btn btn-danger">ลบ</button> -->
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>วันที่</td>
+                          <td>0</td>
+                          <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="กรอก ...">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>สายป้อน</td>
+                          <td>1</td>
+                          <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="กรอก ...">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>เวลาเริ่มไฟฟ้าดับ (from)</td>
+                          <td>2</td>
+                          <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="กรอก ...">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>เวลาจ่ายไฟกลับ (to)</td>
+                          <td>3</td>
+                          <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="กรอก ...">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>ระยะเวลาไฟดับ (นาที)</td>
+                          <td>4</td>
+                          <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="กรอก ...">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>ระยะเวลาไฟดับเฉลี่ย (นาที)</td>
+                          <td>5</td>
+                          <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="กรอก ...">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>เวลาจ่ายไฟกลับ step1 (to1)</td>
+                          <td>6</td>
+                          <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="กรอก ...">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>เวลาจ่ายไฟกลับ step2 (to2)</td>
+                          <td>7</td>
+                          <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="กรอก ...">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>เวลาจ่ายไฟกลับ step3 (to3)</td>
+                          <td>8</td>
+                          <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="กรอก ...">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>เวลาจ่ายไฟกลับ step4 (to4 )</td>
+                          <td>9</td>
+                          <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="กรอก ...">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>ฟข. ต้นเหตุ</td>
+                          <td>10</td>
+                          <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="กรอก ...">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>ฟข. ได้รับผลกระทบ</td>
+                          <td>11</td>
+                          <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="กรอก ...">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>จำนวนลูกค้า (ฟข. ที่ได้รับผลกระทบ)</td>
+                          <td>12</td>
+                          <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="กรอก ...">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>จำนวนลูกค้านาที</td>
+                          <td>13</td>
+                          <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="กรอก ...">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>สาเหตุ</td>
+                          <td>14</td>
+                          <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="กรอก ...">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>อุปกรณ์ที่เกี่ยวข้อง</td>
+                          <td>15</td>
+                          <td>
+                            <input type="text" class="form-control form-control-sm" placeholder="กรอก ...">
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    </div>
+                    <div class="col-lg-6 ml-auto">
+                      <div class="form-group">
+                        <label>รายละเอียดอื่นๆ</label>
+                        <textarea class="form-control" rows="3" placeholder="กรอกรายละเอียดประกอบเหตุการณ์ที่ต้องการแก้ไข..." style="margin-top: 0px; margin-bottom: 0px; height: 288px;"></textarea>
+                      </div>
+                      <!-- <div class="form-group">
+                        <label for="customFile1">ไฟล์แนบ 1</label>
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="customFile1" lang="th">
+                          <label class="custom-file-label" for="customFile1">ไฟล์แนบ 1</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="customFile2">ไฟล์แนบ 2</label>
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="customFile2" lang="th">
+                          <label class="custom-file-label" for="customFile2">ไฟล์แนบ 2</label>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="customFile3">ไฟล์แนบ 3</label>
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="customFile3" lang="th">
+                          <label class="custom-file-label" for="customFile3">ไฟล์แนบ 3</label>
+                        </div>
+                      </div> -->
+                      <input type="file" 
+                      class="filepond"
+                      name="filepond"
+                      multiple
+                      data-max-file-size="3MB"
+                      data-max-files="3" />
+                    </div>
                   </div>
                 </div>
-                <div class="form-group">
-                  <label for="customFile2">ไฟล์แนบ 2</label>
-                  <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="customFile2" lang="th">
-                    <label class="custom-file-label" for="customFile2">ไฟล์แนบ 2</label>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="customFile3">ไฟล์แนบ 3</label>
-                  <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="customFile3" lang="th">
-                    <label class="custom-file-label" for="customFile3">ไฟล์แนบ 3</label>
-                  </div>
-                </div> -->
-                <input type="file" 
-                  class="filepond"
-                  name="filepond"
-                  multiple
-                  data-max-file-size="3MB"
-                  data-max-files="3" />
               </div>
-              <div class="modal-footer justify-content-between">
+              <div class="modal-footer"> <!--  justify-content-between -->
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary">Save changes</button>
               </div>

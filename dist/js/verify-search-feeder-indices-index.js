@@ -303,7 +303,7 @@ $(function () {
       let modalElem = $("#modal-default");
       let rowArr = rowData.split(','); // split string on comma
       console.log(rowArr);
-      modalElem.find('.modal-title').html(`แก้ไขเหตุการณ์<br>วันที่ ${rowArr[0]} สายป้อน ${rowArr[1]} เวลา ${rowArr[2]}`);
+      // modalElem.find('.modal-title').html(`แก้ไขเหตุการณ์<br>วันที่ ${rowArr[0]} สายป้อน ${rowArr[1]} เวลา ${rowArr[2]}`);
       modalElem.find('textarea').val('');
       modalElem.modal({backdrop: "static"});
     };
@@ -331,7 +331,7 @@ $(function () {
     FilePond.create(
       document.querySelector('input[type="file"]'),
       {
-        labelIdle: 'ลากแล้ววางไฟล์ที่ต้องการ หรือ <span class="filepond--label-action">คลิกเลือกไฟล์ </span>',
+        labelIdle: 'ลากแล้ววางไฟล์ หรือ <span class="filepond--label-action">คลิกเลือกไฟล์ </span> ประกอบ',
       }
     );
 
